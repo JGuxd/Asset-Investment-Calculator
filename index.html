@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JGuxd Asset Investment Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN for pie chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+    <!-- Chart.js Datalabels Plugin CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        /* Custom styles for Inter font and general body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align items to the top for better scrolling on smaller screens */
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        /* Style for the main container */
+        .calculator-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #ffffff; /* White background for the card */
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            padding: 2.5rem; /* Increased padding */
+            box-sizing: border-box;
+        }
+        /* Styles for input fields and selects */
+        input[type="text"], input[type="number"], select {
+            border: 1px solid #cbd5e0; /* Light gray border */
+            border-radius: 0.5rem; /* Rounded input corners */
+            padding: 0.75rem 1rem; /* Comfortable padding */
+            transition: all 0.2s ease-in-out;
+            outline: none;
+            height: 3.25rem;
+            width: 100%; /* Ensure inputs fill their grid space properly */
+        }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            border-color: #3b82f6; /* Blue focus border */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Soft blue glow on focus */
+        }
+        /* Styles for buttons */
+        button {
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            border-radius: 0.75rem; /* Rounded buttons */
+            padding: 0.75rem 1.5rem;
+            font-weight: 600; /* Semi-bold text */
+        }
+        button:hover {
+            transform: translateY(-1px); /* Slight lift on hover */
+        }
+        button:active {
+            transform: translateY(0); /* Press effect */
+        }
+        .add-button {
+            background-color: #22c55e; /* Green for add */
+            color: white;
+        }
+        .add-button:hover {
+            background-color: #16a34a; /* Darker green on hover */
+        }
+        .save-button { /* New style for save button */
+            background-color: #f97316; /* Orange for save */
+            color: white;
+        }
+        .save-button:hover {
+            background-color: #ea580c; /* Darker orange on hover */
+        }
+        .remove-button {
+            background-color: #ef4444; /* Red for remove */
+            color: white;
+            padding: 0.5rem 1rem; /* Smaller padding for remove button */
+            font-size: 0.875rem; /* Smaller font for remove button */
+        }
+        .remove-button:hover {
+            background-color: #dc2626; /* Darker red on hover */
+        }
+        /* Table specific styles */
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #e2e8f0; /* Light gray for table headers */
+            font-weight: 600;
+        }
+        /* Updated discrepancy colors */
+        .discrepancy-positive {
+            color: #16a34a; /* Green for positive difference (over-allocated) */
+            font-weight: bold;
+        }
+        .discrepancy-negative {
+            color: #dc2626; /* Red for negative difference (under-allocated) */
+            font-weight: bold;
+        }
+        .discrepancy-zero {
+            color: #000000; /* Changed to Black for zero difference */
+            font-weight: bold;
+        }
+        /* Error/Info messages */
+        .message-box {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .message-error {
+            background-color: #fee2e2; /* Light red */
+            color: #dc2626; /* Dark red text */
+            border: 1px solid #ef4444;
+        }
+        .message-warning {
+            background-color: #fff7ed; /* Light orange */
+            color: #f97316; /* Dark orange text */
+            border: 1px solid #fb923c;
+        }
+        .message-success {
+            background-color: #dcfce7; /* Light green */
+            color: #16a34a; /* Dark green text */
+            border: 1px solid #22c55e;
+        }
+        .message-info { /* For loading/saving messages */
+            background-color: #e0f2fe; /* Light blue */
+            color: #2563eb; /* Dark blue text */
+            border: 1px solid #3b82f6;
+        }
+
+        /* Hide spinner arrows for number input (cross-browser) */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        /* Force uppercase for Asset Name input */
+        .asset-name-input {
+            text-transform: uppercase;
+        }
+
+        /* Consolidated Grid Layout for Headers and Rows */
+        .asset-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.2fr;
+            gap: 1rem;
+            align-items: center;
+        }
+        /* Responsive layout for mobile */
+        @media (max-width: 639px) {
+            .asset-grid {
+                grid-template-columns: 1fr; /* Stack elements on a single column */
+                gap: 0.5rem;
+            }
+            .asset-grid > * {
+                width: 100%; /* Make each element full width */
+            }
+            .asset-grid input,
+            .asset-grid select {
+                max-width: 100%; /* Allow inputs to fill their space */
+            }
+            .asset-grid .full-asset-name-wrapper,
+            .asset-grid .full-asset-name-wrapper span,
+            .asset-grid .full-asset-name-wrapper input {
+                width: 100%; /* Ensure full name fields are also responsive */
+            }
+        }
+        
+        .asset-row-wrapper {
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Style for the subtle X button - changed color to black */
+        .remove-button.subtle-x {
+            background-color: transparent; /* No background by default */
+            color: #000000; /* Changed to Black 'X' */
+            border: none;
+            box-shadow: none;
+            font-size: 1.25rem; /* Larger 'X' */
+            padding: 0.25rem;
+            width: 2rem; /* Fixed width/height for a perfect circle */
+            height: 2rem;
+            line-height: 1; /* Center the X */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        .remove-button.subtle-x:hover {
+            background-color: rgba(0, 0, 0, 0.1); /* Light black hover */
+            transform: scale(1.1); /* Slightly enlarge on hover */
+        }
+        .remove-button.subtle-x:active {
+            transform: scale(0.9); /* Press effect */
+        }
+
+        /* Adjust font size for Asset Type dropdown and Save button */
+        select.asset-type-dropdown {
+            font-size: 0.875rem; /* text-sm equivalent, slightly smaller than default text-lg */
+            height: 3.25rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+        button.save-button {
+            font-size: 0.75rem; /* text-xs equivalent, slightly smaller */
+            padding: 0.5rem 1rem; /* Adjust padding for smaller font */
+        }
+        /* Style for the new add asset button as an X */
+        .add-asset-button-in-row {
+            background-color: #dcfce7; /* Subtle light green background */
+            color: #16a34a; /* Darker Green '+' */
+            border: none;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow */
+            font-size: 1.75rem; /* Larger '+' */
+            padding: 0.25rem;
+            width: 2.25rem; /* Slightly larger width/height */
+            height: 2.25rem;
+            line-height: 1; /* Center the + */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%; /* Perfect circle */
+            flex-shrink: 0; /* Prevent it from shrinking */
+            margin-left: auto;
+        }
+        .add-asset-button-in-row:hover {
+            background-color: #86efac; /* More vibrant green on hover */
+            transform: scale(1.1); /* Slightly enlarge on hover */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* More pronounced shadow on hover */
+        }
+        .add-asset-button-in-row:active {
+            transform: scale(0.9); /* Press effect */
+        }
+        /* New style for the full asset name display and input */
+        .full-asset-name-text, .full-asset-name-input-field {
+            font-size: 0.75rem; /* text-xs */
+            color: #4b5563; /* gray-700 */
+            text-align: left;
+            padding-left: 0.25rem;
+            min-height: 1.25rem;
+            cursor: pointer;
+            padding-top: 0.125rem;
+            padding-bottom: 0.125rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+        }
+        .full-asset-name-input-field {
+            border: 1px solid #cbd5e0;
+            border-radius: 0.25rem;
+            outline: none;
+        }
+        .full-asset-name-input-field:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.3);
+        }
+        .color-swatch {
+            display: inline-block;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 0.25rem;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">JGuxd Asset Investment Calculator</h1>
+
+        <!-- Total Portfolio Amount Input -->
+        <div class="mb-8 p-4 bg-blue-50 rounded-lg shadow-sm flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+            <label for="totalPortfolioAmountInput" class="text-lg font-semibold text-gray-700">Total Portfolio Amount ($):</label>
+            <input type="text" id="totalPortfolioAmountInput" value="100,000.00" min="0" step="100"
+                   class="w-full sm:w-auto text-lg text-center font-bold text-blue-800 border-blue-300">
+        </div>
+
+        <!-- User Input Section -->
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Asset Allocations</h2>
+
+        <!-- Column Headers for User Input using Grid -->
+        <div class="hidden sm:grid asset-grid px-4 py-2 text-sm text-gray-600 uppercase font-semibold">
+            <div class="text-left">Asset Name/Symbol</div>
+            <div class="text-left">Asset Type</div>
+            <div class="text-center">Amount ($)</div>
+            <div class="text-center">Percentage (%)</div>
+            <div></div> <!-- Empty header for X column -->
+        </div>
+
+        <div id="userAssetsContainer" class="space-y-4 mb-6">
+            <!-- User-defined assets will be added here by JavaScript -->
+        </div>
+
+        <!-- New: Blank line item for adding assets -->
+        <div id="newAssetRow" class="asset-row-wrapper">
+            <div class="asset-grid">
+                <div class="flex flex-col gap-1">
+                    <input type="text" id="new-asset-name" placeholder="Asset Name/Symbol" value="" class="text-lg font-medium text-gray-700 asset-name-input">
+                    <div class="full-asset-name-wrapper">
+                        <span id="new-full-asset-name-display" class="full-asset-name-text" data-placeholder="Full Asset Name (Click to add)"></span>
+                        <input type="text" id="new-full-asset-name-input" placeholder="Full Asset Name" value="" class="full-asset-name-input-field" style="display: none;">
+                    </div>
+                </div>
+                <select id="new-asset-category" class="asset-type-dropdown"></select>
+                <input type="text" id="new-asset-amount" placeholder="Amount ($)" value="0.00" min="0" step="0.01" class="text-lg text-center">
+                <input type="text" id="new-asset-percentage" placeholder="Percentage (%)" value="0.00" min="0" step="0.01" class="text-lg text-center">
+                <button id="addNewAssetBtn" class="add-asset-button-in-row rounded-full">
+                    +
+                </button>
+            </div>
+        </div>
+
+        <!-- New: Total User Entered Line Items Summary -->
+        <div class="asset-row-wrapper bg-blue-100 font-bold text-blue-800">
+            <div class="asset-grid items-center">
+                <div class="p-2">TOTAL:</div>
+                <div></div> <!-- Placeholder for Asset Type column alignment -->
+                <div class="text-center" id="totalEnteredAmount"></div>
+                <div class="text-center" id="totalEnteredPercentage"></div>
+                <div class="flex justify-center">
+                    <button id="savePortfolioBtn" class="save-button text-white rounded-xl shadow-lg">
+                        Save Portfolio
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="flex justify-center space-x-4 mb-6 mt-6">
+            <!-- Add Asset button moved into the newAssetRow -->
+        </div>
+
+        <!-- Summary and Error Messages -->
+        <div class="border-t-2 border-gray-200 pt-6 mt-6">
+            <div id="statusMessage" class="message-box message-info text-center">
+                Initializing...
+            </div>
+        </div>
+
+        <!-- Portfolio Comparison Table -->
+        <h2 class="text-2xl font-semibold text-gray-800 my-6">Portfolio Comparison</h2>
+        <div class="overflow-x-auto rounded-xl shadow-md">
+            <table class="min-w-full bg-white rounded-xl">
+                <thead>
+                    <tr>
+                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Category</th>
+                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Recommended (%)</th>
+                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Your Allocated (%)</th>
+                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Difference (%)</th>
+                    </tr>
+                </thead>
+                <tbody id="portfolioTableBody">
+                    <!-- Table rows will be generated here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Asset Allocation Pie Chart Section -->
+        <h2 class="text-2xl font-semibold text-gray-800 my-6">Asset Allocation Pie Chart</h2>
+        <div class="flex justify-center items-center p-4 bg-gray-50 rounded-lg shadow-sm" style="width: 100%; min-height: 400px; margin: 0 auto;">
+            <canvas id="portfolioPieChart" class="w-full h-full"></canvas>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration and Initialization (MANDATORY) ---
+        // These global variables are provided by the Canvas environment.
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfigRaw = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+        let firebaseConfig = null;
+        if (firebaseConfigRaw) {
+            try {
+                firebaseConfig = JSON.parse(firebaseConfigRaw);
+            } catch (e) {
+                console.error("Error parsing __firebase_config:", e);
+            }
+        }
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app;
+        let db;
+        let auth;
+        let userId; // Will store the authenticated user's ID
+
+        // Initialize Firebase services
+        if (firebaseConfig && firebaseConfig.projectId) { // Check for projectId to ensure validity
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } else {
+            console.error("Firebase configuration not found or invalid (missing projectId). Data persistence will not work.");
+            document.getElementById('statusMessage').textContent = "Error: Firebase not configured. Data cannot be saved.";
+            document.getElementById('statusMessage').classList.add('message-error');
+        }
+
+        // --- Constants for Ray Dalio's All-Weather Portfolio ---
+        const RAY_DALIO_ALLOCATION = {
+            'Stocks': 30,
+            'Long-Term Bonds': 40,
+            'Intermediate-Term Bonds': 15,
+            'Gold': 7.5,
+            'Commodities': 7.5
+        };
+
+        const ASSET_CATEGORIES = [
+            'Stocks',
+            'Long-Term Bonds',
+            'Intermediate-Term Bonds',
+            'Gold',
+            'Commodities',
+            'Other (Not Categorized)' // For assets that don't fit Dalio's categories
+        ];
+
+        // Define colors for each asset type for the pie chart
+        const ASSET_COLORS = {
+            'Stocks': '#4CAF50',         // Green
+            'Long-Term Bonds': '#2196F3', // Blue
+            'Intermediate-Term Bonds': '#03A9F4', // Lighter Blue
+            'Gold': '#FFD700',           // Gold
+            'Commodities': '#FF9800',    // Orange
+            'Other (Not Categorized)': '#9E9E9E' // Gray
+        };
+
+        // --- Global Variables ---
+        let userAssets = []; // Stores user-entered asset data
+        let assetIdCounter = 0; // Ensures unique IDs for new assets
+        let portfolioPieChartInstance; // Chart.js instance
+
+        // --- DOM Elements ---
+        const totalPortfolioAmountInput = document.getElementById('totalPortfolioAmountInput');
+        const userAssetsContainer = document.getElementById('userAssetsContainer');
+        const newAssetNameInput = document.getElementById('new-asset-name');
+        const newAssetCategorySelect = document.getElementById('new-asset-category');
+        const newAssetAmountInput = document.getElementById('new-asset-amount');
+        const newAssetPercentageInput = document.getElementById('new-asset-percentage');
+        const newFullAssetNameDisplay = document.getElementById('new-full-asset-name-display');
+        const newFullAssetNameInput = document.getElementById('new-full-asset-name-input');
+
+
+        const savePortfolioBtn = document.getElementById('savePortfolioBtn'); // New save button
+        const statusMessage = document.getElementById('statusMessage'); // Replaced totalAllocationMessage for general status
+        const portfolioTableBody = document.getElementById('portfolioTableBody');
+        const totalEnteredAmountSpan = document.getElementById('totalEnteredAmount');
+        const totalEnteredPercentageSpan = document.getElementById('totalEnteredPercentage');
+        const portfolioPieChartCanvas = document.getElementById('portfolioPieChart');
+
+        // --- Register Chart.js Datalabels Plugin ---
+        // This MUST be done once globally.
+        Chart.register(ChartDataLabels);
+
+        // --- Helper Function: Format Percentage ---
+        // Ensures percentages are formatted consistently
+        function formatPercentage(value) {
+            const cleanValue = parseFloat(String(value).replace(/%$/g, ''));
+            if (isNaN(cleanValue)) {
+                return "0.00%";
+            }
+            return `${cleanValue.toFixed(2)}%`;
+        }
+
+        // --- Helper Function: Clean and Format Currency ---
+        // Cleans the input value by removing non-numeric characters (except decimal and sign)
+        // Then formats it as currency with commas and two decimal places.
+        function cleanAndFormatCurrency(value) {
+            const cleanValue = parseFloat(String(value).replace(/[^0-9.-]+/g,"")) || 0;
+            return `$${cleanValue.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
+        }
+
+        // --- Helper Function: Get Raw Numeric Value from Formatted String ---
+        // Converts a formatted currency string back to a raw number.
+        function getRawNumberFromFormattedCurrency(formattedValue) {
+            return parseFloat(String(formattedValue).replace(/[^0-9.-]+/g, "")) || 0;
+        }
+
+        // --- Pie Chart Functions ---
+        function updatePieChart() {
+            const currentAssets = [...userAssets];
+            // Include data from the "new asset" row if it's not empty
+            const newAssetAmount = getRawNumberFromFormattedCurrency(newAssetAmountInput.value);
+            const newAssetPercentage = parseFloat(String(newAssetPercentageInput.value).replace('%', '')) || 0;
+
+            if (newAssetNameInput.value || newFullAssetNameInput.value || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder && newFullAssetNameInput.style.display === 'none') || newAssetCategorySelect.value !== ASSET_CATEGORIES[0] || newAssetAmount > 0 || newAssetPercentage > 0) {
+                currentAssets.push({
+                    category: newAssetCategorySelect.value,
+                    percentage: newAssetPercentage
+                });
+            }
+
+            const aggregatedData = {};
+            currentAssets.forEach(asset => {
+                const category = ASSET_CATEGORIES.includes(asset.category) ? asset.category : 'Other (Not Categorized)';
+                if (aggregatedData[category]) {
+                    aggregatedData[category] += asset.percentage;
+                } else {
+                    aggregatedData[category] = asset.percentage;
+                }
+            });
+
+            const labels = Object.keys(aggregatedData);
+            const data = Object.values(aggregatedData);
+            const colors = labels.map(label => ASSET_COLORS[label] || ASSET_COLORS['Other (Not Categorized)']);
+
+            const chartLabels = [];
+            const chartData = [];
+            const chartColors = [];
+
+            labels.forEach((label, index) => {
+                if (data[index] > 0) {
+                    chartLabels.push(label);
+                    chartData.push(data[index]);
+                    chartColors.push(colors[index]);
+                }
+            });
+
+            if (portfolioPieChartInstance) {
+                portfolioPieChartInstance.data.labels = chartLabels;
+                portfolioPieChartInstance.data.datasets[0].data = chartData;
+                portfolioPieChartInstance.data.datasets[0].backgroundColor = chartColors;
+                portfolioPieChartInstance.update();
+            } else {
+                const ctx = portfolioPieChartCanvas.getContext('2d');
+                portfolioPieChartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: chartLabels,
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: chartColors,
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                top: 40,
+                                bottom: 20,
+                                left: 20,
+                                right: 20
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                display: true,
+                                labels: {
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += formatPercentage(context.parsed);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            },
+                            datalabels: {
+                                color: '#000000',
+                                formatter: (value, context) => {
+                                    if (value > 0) {
+                                        return formatPercentage(value);
+                                    }
+                                    return '';
+                                },
+                                anchor: 'center',
+                                align: 'center',
+                                offset: 8,
+                                font: {
+                                    weight: 'bold'
+                                },
+                                backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                                borderRadius: 4,
+                                padding: 4,
+                                connectorLine: {
+                                    display: false
+                                },
+                                clamp: true
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+        }
+
+        // --- Core Function: Recalculate and Display ---
+        function recalculateAndDisplay() {
+            renderPortfolioTable();
+            validateTotalAllocation();
+            updateUserEnteredTotals();
+            updatePieChart();
+        }
+
+        // --- User Assets Section Functions ---
+
+        // Function to add a new asset to the userAssets array and render its row
+        function addAssetFromNewRow() {
+            const currentTotalPortfolioAmount = getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value);
+            const newAssetData = {
+                name: newAssetNameInput.value,
+                fullName: newFullAssetNameInput.value || newFullAssetNameDisplay.textContent,
+                category: newAssetCategorySelect.value,
+                amount: getRawNumberFromFormattedCurrency(newAssetAmountInput.value),
+                percentage: parseFloat(String(newAssetPercentageInput.value).replace('%','')) || 0
+            };
+            
+            if (newAssetData.name || newAssetData.fullName || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder && newFullAssetNameInput.style.display === 'none') || newAssetData.category !== ASSET_CATEGORIES[0] || newAssetData.amount > 0 || newAssetData.percentage > 0) {
+                const newAsset = {
+                    id: assetIdCounter++,
+                    name: String(newAssetData.name).toUpperCase(),
+                    fullName: newAssetData.fullName === newFullAssetNameDisplay.dataset.placeholder ? '' : newAssetData.fullName,
+                    category: newAssetData.category,
+                    amount: newAssetData.amount,
+                    percentage: newAssetData.percentage
+                };
+
+                if (newAssetData.amount > 0 && newAssetData.percentage === 0) {
+                    if (currentTotalPortfolioAmount > 0) {
+                        newAsset.percentage = (newAsset.amount / currentTotalPortfolioAmount) * 100;
+                    }
+                } else if (newAssetData.percentage > 0 && newAssetData.amount === 0) {
+                    if (currentTotalPortfolioAmount > 0) {
+                        newAsset.amount = (newAsset.percentage / 100) * currentTotalPortfolioAmount;
+                    }
+                }
+
+                userAssets.push(newAsset);
+                renderAssetRow(newAsset);
+            }
+            
+            newAssetNameInput.value = '';
+            newFullAssetNameInput.value = '';
+            newFullAssetNameDisplay.textContent = newFullAssetNameDisplay.dataset.placeholder;
+            newFullAssetNameDisplay.style.display = 'block';
+            newFullAssetNameInput.style.display = 'none';
+
+            newAssetCategorySelect.value = ASSET_CATEGORIES[0];
+            newAssetAmountInput.value = '0.00';
+            newAssetPercentageInput.value = '0.00%';
+
+            newAssetNameInput.focus();
+
+            recalculateAndDisplay();
+        }
+
+        // This function is used for programmatically adding initial/default assets
+        function addInitialAsset(initialData = {}) {
+            const currentTotalPortfolioAmount = getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value);
+            const newAsset = {
+                id: assetIdCounter++,
+                name: initialData.name || '',
+                fullName: initialData.fullName || '',
+                category: initialData.category || ASSET_CATEGORIES[0],
+                percentage: initialData.percentage || 0
+            };
+            newAsset.amount = (newAsset.percentage / 100) * currentTotalPortfolioAmount;
+            userAssets.push(newAsset);
+            renderAssetRow(newAsset);
+        }
+
+        // Function to remove an asset from the userAssets array and its row from DOM
+        function removeAsset(idToRemove) {
+            userAssets = userAssets.filter(asset => asset.id !== idToRemove);
+            document.getElementById(`user-asset-wrapper-${idToRemove}`)?.remove();
+            recalculateAndDisplay();
+        }
+
+        // Function to update an asset's properties in the data model
+        function updateAssetData(idToUpdate, field, value) {
+            const assetIndex = userAssets.findIndex(asset => asset.id === idToUpdate);
+            if (assetIndex === -1) return;
+
+            const currentTotalPortfolioAmount = getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value);
+            const asset = userAssets[assetIndex];
+
+            if (field === 'amount') {
+                asset.amount = Math.max(0, value);
+                if (currentTotalPortfolioAmount > 0) {
+                    asset.percentage = (asset.amount / currentTotalPortfolioAmount) * 100;
+                } else {
+                    asset.percentage = 0;
+                }
+                const percentageInput = document.getElementById(`asset-percentage-${idToUpdate}`);
+                if (percentageInput) percentageInput.value = formatPercentage(asset.percentage);
+            } else if (field === 'percentage') {
+                asset.percentage = Math.max(0, value);
+                if (currentTotalPortfolioAmount > 0) {
+                    asset.amount = (asset.percentage / 100) * currentTotalPortfolioAmount;
+                } else {
+                    asset.amount = 0;
+                }
+                const amountInput = document.getElementById(`asset-amount-${idToUpdate}`);
+                if (amountInput) amountInput.value = cleanAndFormatCurrency(asset.amount);
+            } else if (field === 'name') {
+                asset.name = String(value).toUpperCase();
+            } else if (field === 'fullName') {
+                asset.fullName = value;
+            } else {
+                asset[field] = value;
+            }
+        }
+
+        // Function to render a single asset row into the DOM
+        function renderAssetRow(asset) {
+            const assetWrapperDiv = document.createElement('div');
+            assetWrapperDiv.className = 'asset-row-wrapper';
+            assetWrapperDiv.id = `user-asset-wrapper-${asset.id}`;
+
+            const formattedAmount = cleanAndFormatCurrency(asset.amount);
+            const formattedPercentage = formatPercentage(asset.percentage);
+
+            assetWrapperDiv.innerHTML = `
+                <div class="asset-grid">
+                    <div class="flex flex-col gap-1">
+                        <input type="text" id="asset-name-${asset.id}" placeholder="Asset Name/Symbol" value="${asset.name}"
+                               class="text-lg font-medium text-gray-700 asset-name-input">
+                        <div class="full-asset-name-wrapper">
+                            <span id="full-asset-name-display-${asset.id}" class="full-asset-name-text" data-placeholder="Full Asset Name (Click to add)">${asset.fullName || 'Click to add full name'}</span>
+                            <input type="text" id="full-asset-name-input-${asset.id}" placeholder="Full Asset Name" value="${asset.fullName}"
+                                   class="full-asset-name-input-field" style="display: none;">
+                        </div>
+                    </div>
+                    <select id="asset-category-${asset.id}" class="asset-type-dropdown"></select>
+                    <input type="text" id="asset-amount-${asset.id}" placeholder="Amount ($)" value="${formattedAmount}" min="0" step="0.01"
+                           class="text-lg text-center">
+                    <input type="text" id="asset-percentage-${asset.id}" placeholder="Percentage (%)" value="${formattedPercentage}" min="0" step="0.01"
+                           class="text-lg text-center">
+                    <button id="remove-asset-${asset.id}" class="remove-button subtle-x rounded-full">
+                        X
+                    </button>
+                </div>
+            `;
+
+            const categorySelect = assetWrapperDiv.querySelector(`#asset-category-${asset.id}`);
+            ASSET_CATEGORIES.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+            categorySelect.value = asset.category;
+
+            assetWrapperDiv.querySelector(`#asset-name-${asset.id}`).addEventListener('input', (e) => updateAssetData(asset.id, 'name', e.target.value));
+            assetWrapperDiv.querySelector(`#asset-name-${asset.id}`).addEventListener('blur', recalculateAndDisplay);
+            
+            const fullAssetNameDisplay = assetWrapperDiv.querySelector(`#full-asset-name-display-${asset.id}`);
+            const fullAssetNameInput = assetWrapperDiv.querySelector(`#full-asset-name-input-${asset.id}`);
+
+            fullAssetNameDisplay.addEventListener('click', () => {
+                fullAssetNameDisplay.style.display = 'none';
+                fullAssetNameInput.style.display = 'block';
+                fullAssetNameInput.value = fullAssetNameDisplay.textContent === fullAssetNameDisplay.dataset.placeholder ? '' : fullAssetNameDisplay.textContent;
+                fullAssetNameInput.focus();
+            });
+
+            fullAssetNameInput.addEventListener('blur', (e) => {
+                const newValue = e.target.value;
+                updateAssetData(asset.id, 'fullName', newValue);
+                fullAssetNameDisplay.textContent = newValue || fullAssetNameDisplay.dataset.placeholder;
+                fullAssetNameDisplay.style.display = 'block';
+                fullAssetNameInput.style.display = 'none';
+                recalculateAndDisplay();
+            });
+
+            fullAssetNameInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.target.blur();
+                }
+            });
+
+            assetWrapperDiv.querySelector(`#asset-category-${asset.id}`).addEventListener('change', (e) => {
+                updateAssetData(asset.id, 'category', e.target.value);
+                recalculateAndDisplay();
+            });
+            
+            const amountInput = assetWrapperDiv.querySelector(`#asset-amount-${asset.id}`);
+            amountInput.addEventListener('input', (e) => {
+                const rawValue = getRawNumberFromFormattedCurrency(e.target.value);
+                updateAssetData(asset.id, 'amount', rawValue);
+            });
+            amountInput.addEventListener('blur', (e) => {
+                e.target.value = cleanAndFormatCurrency(e.target.value);
+                recalculateAndDisplay();
+            });
+            amountInput.value = cleanAndFormatCurrency(asset.amount);
+
+            const percentageInput = assetWrapperDiv.querySelector(`#asset-percentage-${asset.id}`);
+            percentageInput.addEventListener('input', (e) => {
+                const rawValue = parseFloat(String(e.target.value).replace('%','')) || 0;
+                updateAssetData(asset.id, 'percentage', rawValue);
+            });
+            percentageInput.addEventListener('blur', (e) => {
+                e.target.value = formatPercentage(e.target.value);
+                recalculateAndDisplay();
+            });
+            percentageInput.value = formatPercentage(asset.percentage);
+
+            assetWrapperDiv.querySelector(`#remove-asset-${asset.id}`).addEventListener('click', () => removeAsset(asset.id));
+
+            userAssetsContainer.appendChild(assetWrapperDiv);
+        }
+
+        // --- Function to update the user-entered totals line ---
+        function updateUserEnteredTotals() {
+            const assetsForTotalCalculation = [...userAssets];
+            const newAssetAmount = getRawNumberFromFormattedCurrency(newAssetAmountInput.value);
+            const newAssetPercentage = parseFloat(String(newAssetPercentageInput.value).replace('%', '')) || 0;
+
+            if (newAssetNameInput.value || newFullAssetNameInput.value || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder && newFullAssetNameInput.style.display === 'none') || newAssetCategorySelect.value !== ASSET_CATEGORIES[0] || newAssetAmount > 0 || newAssetPercentage > 0) {
+                assetsForTotalCalculation.push({
+                    amount: newAssetAmount,
+                    percentage: newAssetPercentage
+                });
+            }
+
+            const totalAmountSum = assetsForTotalCalculation.reduce((sum, asset) => sum + (parseFloat(asset.amount) || 0), 0);
+            const totalPercentageSum = assetsForTotalCalculation.reduce((sum, asset) => sum + (parseFloat(asset.percentage) || 0), 0);
+
+            totalEnteredAmountSpan.textContent = cleanAndFormatCurrency(totalAmountSum);
+            totalEnteredPercentageSpan.textContent = formatPercentage(totalPercentageSum);
+        }
+
+        // --- Total Allocation Validation Functions ---
+
+        // Function to get the current total user allocation percentage (including blank row)
+        function getTotalUserAllocationPercentageWithNewRow() {
+            const assetsForCalculation = [...userAssets];
+            const newAssetAmount = getRawNumberFromFormattedCurrency(newAssetAmountInput.value);
+            const newAssetPercentage = parseFloat(String(newAssetPercentageInput.value).replace('%', '')) || 0;
+
+            if (newAssetNameInput.value || newFullAssetNameInput.value || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder && newFullAssetNameInput.style.display === 'none') || newAssetCategorySelect.value !== ASSET_CATEGORIES[0] || newAssetAmount > 0 || newAssetPercentage > 0) {
+                assetsForCalculation.push({
+                    amount: newAssetAmount,
+                    percentage: newAssetPercentage
+                });
+            }
+            return assetsForCalculation.reduce((sum, asset) => sum + (parseFloat(asset.percentage) || 0), 0);
+        }
+
+
+        // Function to validate the total user allocation (percentage) and display messages
+        function validateTotalAllocation() {
+            const totalPercentage = getTotalUserAllocationPercentageWithNewRow();
+            statusMessage.className = 'message-box text-center';
+
+            if (userAssets.length === 0 && !(newAssetNameInput.value || newFullAssetNameInput.value || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder && newFullAssetNameInput.style.display === 'none') || newAssetCategorySelect.value !== ASSET_CATEGORIES[0] || getRawNumberFromFormattedCurrency(newAssetAmountInput.value) > 0 || parseFloat(String(newAssetPercentageInput.value).replace('%','')) > 0)) {
+                statusMessage.textContent = `Please add assets to start your portfolio calculation.`;
+                statusMessage.classList.add('message-warning');
+            } else if (totalPercentage > 100.01 || totalPercentage < 99.99) {
+                const difference = (totalPercentage - 100).toFixed(2);
+                if (difference > 0) {
+                    statusMessage.textContent = `Total allocation is ${formatPercentage(totalPercentage)}. You are +${difference}% Over 100%. Adjust your allocations.`;
+                    statusMessage.classList.add('message-error');
+                } else {
+                    statusMessage.textContent = `Total allocation is ${formatPercentage(totalPercentage)}. You are ${difference}% Under 100%. Adjust your allocations.`;
+                    statusMessage.classList.add('message-warning');
+                }
+            } else {
+                statusMessage.textContent = `Total allocation is ${formatPercentage(totalPercentage)}. Exactly 100%! Well done.`;
+                statusMessage.classList.add('message-success');
+            }
+        }
+
+        // --- Portfolio Comparison Table Functions ---
+
+        // Function to render the comparison table (now also includes blank row data)
+        function renderPortfolioTable() {
+            portfolioTableBody.innerHTML = '';
+
+            const assetsForCalculation = [...userAssets];
+            const newAssetAmount = getRawNumberFromFormattedCurrency(newAssetAmountInput.value);
+            const newAssetPercentage = parseFloat(String(newAssetPercentageInput.value).replace('%', '')) || 0;
+
+            if (newAssetNameInput.value || newFullAssetNameInput.value || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder && newFullAssetNameInput.style.display === 'none') || newAssetCategorySelect.value !== ASSET_CATEGORIES[0] || newAssetAmount > 0 || newAssetPercentage > 0) {
+                assetsForCalculation.push({
+                    name: newAssetNameInput.value,
+                    category: newAssetCategorySelect.value,
+                    amount: newAssetAmount,
+                    percentage: newAssetPercentage
+                });
+            }
+
+            const userCategoryAllocations = ASSET_CATEGORIES.reduce((acc, category) => {
+                acc[category] = 0;
+                return acc;
+            }, {});
+
+            assetsForCalculation.forEach(asset => {
+                const category = ASSET_CATEGORIES.includes(asset.category) ? asset.category : 'Other (Not Categorized)';
+                userCategoryAllocations[category] += (parseFloat(asset.percentage) || 0);
+            });
+
+            Object.keys(RAY_DALIO_ALLOCATION).forEach(category => {
+                const recommended = RAY_DALIO_ALLOCATION[category];
+                const userAllocated = userCategoryAllocations[category] || 0;
+                const difference = userAllocated - recommended;
+
+                const row = portfolioTableBody.insertRow();
+                row.className = 'border-b border-gray-200 last:border-b-0';
+
+                const categoryCell = row.insertCell();
+                const swatch = document.createElement('span');
+                swatch.className = 'color-swatch';
+                swatch.style.backgroundColor = ASSET_COLORS[category] || ASSET_COLORS['Other (Not Categorized)'];
+                categoryCell.appendChild(swatch);
+                categoryCell.appendChild(document.createTextNode(category));
+                categoryCell.className = 'text-gray-900 flex items-center';
+
+                const recommendedCell = row.insertCell();
+                recommendedCell.textContent = formatPercentage(recommended);
+                recommendedCell.className = 'text-gray-700';
+
+                const userAllocatedCell = row.insertCell();
+                userAllocatedCell.textContent = formatPercentage(userAllocated);
+                userAllocatedCell.className = 'text-gray-900 font-semibold';
+
+                const differenceCell = row.insertCell();
+                differenceCell.textContent = formatPercentage(difference);
+                if (Math.abs(difference) > 0.01) {
+                    if (difference > 0) {
+                        differenceCell.classList.remove('discrepancy-negative', 'discrepancy-zero');
+                        differenceCell.classList.add('discrepancy-positive');
+                    } else {
+                        differenceCell.classList.remove('discrepancy-positive', 'discrepancy-zero');
+                        differenceCell.classList.add('discrepancy-negative');
+                    }
+                } else {
+                    differenceCell.classList.remove('discrepancy-positive', 'discrepancy-negative');
+                    differenceCell.classList.add('discrepancy-zero');
+                }
+            });
+
+            const otherCategoryAllocation = userCategoryAllocations['Other (Not Categorized)'] || 0;
+            if (otherCategoryAllocation > 0) {
+                const row = portfolioTableBody.insertRow();
+                row.className = 'border-b border-gray-200 last:border-b-0 bg-yellow-50';
+                row.innerHTML = `
+                    <td class="font-bold text-yellow-800">Other (Not Categorized)</td>
+                    <td>-</td>
+                    <td class="font-bold text-yellow-800">${formatPercentage(otherCategoryAllocation)}</td>
+                    <td>-</td>
+                `;
+            }
+        }
+
+        // --- Firebase Functions for Saving/Loading ---
+        async function savePortfolio() {
+            if (!db || !userId) {
+                statusMessage.textContent = "Error: Not authenticated. Cannot save portfolio.";
+                statusMessage.classList.remove('message-success', 'message-warning');
+                statusMessage.classList.add('message-error');
+                return;
+            }
+
+            statusMessage.textContent = "Saving portfolio...";
+            statusMessage.classList.remove('message-success', 'message-error', 'message-warning');
+            statusMessage.classList.add('message-info');
+
+            try {
+                const newAssetAmount = getRawNumberFromFormattedCurrency(newAssetAmountInput.value);
+                const newAssetPercentage = parseFloat(String(newAssetPercentageInput.value).replace('%', '')) || 0;
+
+                const assetsToSave = [...userAssets];
+                if (newAssetNameInput.value || newFullAssetNameInput.value || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder && newFullAssetNameInput.style.display === 'none') || newAssetCategorySelect.value !== ASSET_CATEGORIES[0] || newAssetAmount > 0 || newAssetPercentage > 0) {
+                    assetsToSave.push({
+                        name: String(newAssetNameInput.value).toUpperCase(),
+                        fullName: newFullAssetNameInput.value || (newFullAssetNameDisplay.textContent !== newFullAssetNameDisplay.dataset.placeholder ? newFullAssetNameDisplay.textContent : ''),
+                        category: newAssetCategorySelect.value,
+                        amount: newAssetAmount,
+                        percentage: newAssetPercentage
+                    });
+                }
+
+                const portfolioData = {
+                    totalPortfolioAmount: getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value),
+                    assets: assetsToSave.map(asset => ({
+                        name: asset.name,
+                        fullName: asset.fullName,
+                        category: asset.category,
+                        percentage: asset.percentage,
+                        amount: asset.amount
+                    }))
+                };
+
+                const userPortfolioRef = doc(db, 'artifacts', appId, 'users', userId, 'myPortfolios', 'mainPortfolio');
+                await setDoc(userPortfolioRef, portfolioData);
+
+                statusMessage.textContent = "Portfolio saved successfully!";
+                statusMessage.classList.remove('message-error', 'message-warning', 'message-info');
+                statusMessage.classList.add('message-success');
+            } catch (error) {
+                console.error("Error saving portfolio:", error);
+                statusMessage.textContent = `Error saving portfolio: ${error.message}`;
+                statusMessage.classList.remove('message-success', 'message-warning', 'message-info');
+                statusMessage.classList.add('message-error');
+            }
+        }
+
+        async function loadPortfolio() {
+            if (!db || !userId) {
+                statusMessage.textContent = "Not authenticated. Cannot load saved portfolio.";
+                statusMessage.classList.remove('message-success', 'message-error');
+                statusMessage.classList.add('message-warning');
+                return false;
+            }
+
+            statusMessage.textContent = "Loading portfolio...";
+            statusMessage.classList.remove('message-success', 'message-error', 'message-warning');
+            statusMessage.classList.add('message-info');
+
+            try {
+                const userPortfolioRef = doc(db, 'artifacts', appId, 'users', userId, 'myPortfolios', 'mainPortfolio');
+                const docSnap = await getDoc(userPortfolioRef);
+
+                if (docSnap.exists()) {
+                    const savedData = docSnap.data();
+                    
+                    userAssets = [];
+                    assetIdCounter = 0;
+                    userAssetsContainer.innerHTML = '';
+
+                    totalPortfolioAmountInput.value = cleanAndFormatCurrency(savedData.totalPortfolioAmount);
+                    savedData.assets.forEach(assetData => {
+                        addInitialAsset(assetData);
+                    });
+
+                    statusMessage.textContent = "Portfolio loaded successfully!";
+                    statusMessage.classList.remove('message-error', 'message-info');
+                    statusMessage.classList.add('message-success');
+                    recalculateAndDisplay();
+                    return true;
+                } else {
+                    statusMessage.textContent = "No saved portfolio found. Loading default assets.";
+                    statusMessage.classList.remove('message-error', 'message-info');
+                    statusMessage.classList.add('message-warning');
+                    return false;
+                }
+            } catch (error) {
+                console.error("Error loading portfolio:", error);
+                statusMessage.textContent = `Error loading portfolio: ${error.message}`;
+                statusMessage.classList.remove('message-success', 'message-warning', 'message-info');
+                statusMessage.classList.add('message-error');
+                return false;
+            }
+        }
+
+        // --- Initialization ---
+        const defaultAssets = [
+            { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 30 },
+            { name: 'TLT', fullName: 'iShares 20+ Year Treasury Bond ETF', category: 'Long-Term Bonds', percentage: 40 },
+            { name: 'IEI', fullName: 'iShares 3-7 Year Treasury Bond ETF', category: 'Intermediate-Term Bonds', percentage: 15 },
+            { name: 'GLD', fullName: 'SPDR Gold Shares', category: 'Gold', percentage: 7.5 },
+            { name: 'DBC', fullName: 'Invesco DB Commodity Index Tracking Fund', category: 'Commodities', percentage: 7.5 }
+        ];
+
+        // --- Event Listeners for the NEW BLANK ASSET ROW INPUTS ---
+        newAssetNameInput.addEventListener('input', (e) => {
+            newAssetNameInput.value = String(e.target.value).toUpperCase();
+            updateUserEnteredTotals();
+        });
+        newAssetNameInput.addEventListener('blur', recalculateAndDisplay);
+
+        newFullAssetNameDisplay.addEventListener('click', () => {
+            newFullAssetNameDisplay.style.display = 'none';
+            newFullAssetNameInput.style.display = 'block';
+            newFullAssetNameInput.value = newFullAssetNameDisplay.textContent === newFullAssetNameDisplay.dataset.placeholder ? '' : newFullAssetNameDisplay.textContent;
+            newFullAssetNameInput.focus();
+        });
+
+        newFullAssetNameInput.addEventListener('blur', (e) => {
+            const newValue = e.target.value;
+            updateAssetData(-1, 'fullName', newValue);
+            newFullAssetNameDisplay.textContent = newValue || newFullAssetNameDisplay.dataset.placeholder;
+            newFullAssetNameDisplay.style.display = 'block';
+            newFullAssetNameInput.style.display = 'none';
+            recalculateAndDisplay();
+        });
+        newFullAssetNameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.target.blur();
+            }
+        });
+
+        newAssetCategorySelect.addEventListener('change', recalculateAndDisplay);
+
+        newAssetAmountInput.addEventListener('input', (e) => {
+            const rawValue = getRawNumberFromFormattedCurrency(e.target.value);
+            const currentTotalPortfolioAmount = getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value);
+            let calculatedPercentage = 0;
+            if (currentTotalPortfolioAmount > 0) {
+                calculatedPercentage = (rawValue / currentTotalPortfolioAmount) * 100;
+            }
+            newAssetPercentageInput.value = calculatedPercentage.toFixed(2);
+            updateUserEnteredTotals();
+        });
+        newAssetAmountInput.addEventListener('blur', (e) => {
+            e.target.value = cleanAndFormatCurrency(e.target.value);
+            recalculateAndDisplay();
+        });
+
+        newAssetPercentageInput.addEventListener('input', (e) => {
+            const rawValue = parseFloat(String(e.target.value).replace('%','')) || 0;
+            const currentTotalPortfolioAmount = getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value);
+            let calculatedAmount = 0;
+            if (currentTotalPortfolioAmount > 0) {
+                calculatedAmount = (rawValue / 100) * currentTotalPortfolioAmount;
+            }
+            newAssetAmountInput.value = calculatedAmount.toFixed(2);
+            updateUserEnteredTotals();
+        });
+        newAssetPercentageInput.addEventListener('blur', (e) => {
+            e.target.value = formatPercentage(e.target.value);
+            recalculateAndDisplay();
+        });
+
+
+        // Event listener for total portfolio amount input
+        totalPortfolioAmountInput.addEventListener('input', (e) => {
+            let newTotalAmount = getRawNumberFromFormattedCurrency(e.target.value);
+            if (newTotalAmount < 0) {
+                newTotalAmount = 0;
+            }
+            
+            userAssets.forEach(asset => {
+                const currentPercentage = parseFloat(asset.percentage) || 0;
+                asset.amount = (currentPercentage / 100) * newTotalAmount;
+                const amountInput = document.getElementById(`asset-amount-${asset.id}`);
+                if (amountInput && document.activeElement !== amountInput) {
+                    amountInput.value = cleanAndFormatCurrency(asset.amount);
+                }
+            });
+            updateUserEnteredTotals();
+        });
+
+        // Add blur event listener to totalPortfolioAmountInput for final formatting and update
+        totalPortfolioAmountInput.addEventListener('blur', (e) => {
+            const rawValue = getRawNumberFromFormattedCurrency(e.target.value);
+            e.target.value = cleanAndFormatCurrency(rawValue);
+            recalculateAndDisplay();
+        });
+
+        // Event listener for the new add asset button in the blank row
+        addNewAssetBtn.addEventListener('click', addAssetFromNewRow);
+
+
+        // Event listener for saving portfolio
+        savePortfolioBtn.addEventListener('click', savePortfolio);
+
+        // Initial setup on page load
+        window.onload = async () => {
+            // Populate the category dropdown for the blank new asset row
+            ASSET_CATEGORIES.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                newAssetCategorySelect.appendChild(option);
+            });
+            newAssetCategorySelect.value = ASSET_CATEGORIES[0];
+            newFullAssetNameDisplay.textContent = newFullAssetNameDisplay.dataset.placeholder;
+
+            if (auth) {
+                try {
+                    statusMessage.textContent = "Authenticating...";
+                    statusMessage.classList.remove('message-success', 'message-error', 'message-warning');
+                    statusMessage.classList.add('message-info');
+
+                    const userCredential = await signInAnonymously(auth);
+                    userId = userCredential.user.uid;
+                    statusMessage.textContent = `Authenticated (anonymous) as ${userId}.`;
+                    statusMessage.classList.remove('message-error', 'message-warning', 'message-info');
+                    statusMessage.classList.add('message-success');
+                    
+                    const initialTotal = 100000;
+                    totalPortfolioAmountInput.value = initialTotal.toFixed(2);
+
+                    const loaded = await loadPortfolio();
+
+                    if (!loaded) {
+                        defaultAssets.forEach(assetData => {
+                            addInitialAsset(assetData);
+                        });
+                    }
+                    totalPortfolioAmountInput.value = cleanAndFormatCurrency(getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value));
+                    recalculateAndDisplay();
+                } catch (error) {
+                    console.error("Authentication failed:", error);
+                    statusMessage.textContent = `Authentication failed: ${error.message}. Data persistence will not work.`;
+                    statusMessage.classList.remove('message-success', 'message-warning', 'message-info');
+                    statusMessage.classList.add('message-error');
+                    defaultAssets.forEach(assetData => {
+                        addInitialAsset(assetData);
+                    });
+                    recalculateAndDisplay();
+                }
+            } else {
+                statusMessage.textContent = "Firebase not initialized. Data cannot be saved or loaded.";
+                statusMessage.classList.remove('message-success', 'message-warning', 'message-info');
+                statusMessage.classList.add('message-error');
+                defaultAssets.forEach(assetData => {
+                    addInitialAsset(assetData);
+                });
+                recalculateAndDisplay();
+            }
+        };
+    </script>
+</body>
+</html>
