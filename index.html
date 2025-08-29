@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JGuxd Asset Investment Calculator</title>
-    <!-- Tailwind CSS CDN -->
+    <title>JGUXD Asset Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js CDN for pie chart -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     <!-- Chart.js Datalabels Plugin CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
-        /* Custom styles for Inter font and general body styling */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f0f4f8; /* Light blue-gray background */
             display: flex;
-            flex-direction: column; /* Changed to column to stack header and calculator vertically */
+            flex-direction: column;
             justify-content: flex-start;
             align-items: center;
             min-height: 100vh;
@@ -282,559 +281,462 @@
     </style>
 </head>
 <body>
-    <!-- New Header Section -->
-    <header class="w-full bg-gray-900 text-white py-6 mb-8 text-center rounded-b-3xl shadow-lg">
-        <h1 class="text-4xl font-extrabold tracking-tight">JGuxd Asset Investment Calculator</h1>
-    </header>
+    <!-- The main container now controls the overall width and centering -->
+    <div class="max-w-[900px] mx-auto w-full">
 
-    <!-- New Portfolio Preset Dropdown -->
-    <div class="mb-8 w-full max-w-sm">
-        <label for="portfolioPresetSelect" class="block text-sm font-medium text-gray-700 mb-1">My Portfolios</label>
-        <select id="portfolioPresetSelect" class="w-full h-12 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base">
-            <option value="jguxd">JGuxd portfolio</option>
-            <option value="all-weather">All-Weather</option>
-            <option value="50-50">50/50</option>
-        </select>
+        <!-- Header Section -->
+        <header class="py-4">
+            <div class="px-4 sm:px-6 lg:px-8 flex items-center justify-between flex-wrap">
+                <!-- Logo/Site Name -->
+                <div class="text-2xl sm:text-3xl font-bold text-gray-900">
+                    JGUXD Asset Calculator
+                </div>
+                <!-- Navigation Links -->
+                <nav class="mt-4 sm:mt-0">
+                    <ul class="flex space-x-4 sm:space-x-6">
+                        <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">About</a></li>
+                        <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Donate</a></li>
+                        <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Share</a></li>
+                        <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Sign-in/Out</a></li>
+                        <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Settings</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Horizontal line separator -->
+        <hr class="border-t border-gray-300 my-0" />
+
+        <!-- Main Content Area (for your calculator code) -->
+        <main class="flex-grow py-8 px-4 sm:px-6 lg:px-8">
+            <!-- Portfolio Selection Section -->
+            <div class="mb-8 flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8">
+                <!-- Dropdown and Image Container -->
+                <div class="flex-shrink-0 flex items-start space-x-4 w-full md:w-auto">
+                    <img id="portfolioImage" src="" alt="Portfolio thumbnail" class="w-20 h-20 rounded-md shadow-md object-cover" onerror="this.src='https://placehold.co/80x80/E2E8F0/000000?text=No+Image';">
+                    <div>
+                        <label for="portfolioPresetSelect" class="block text-sm font-medium text-gray-700 mb-1">My Portfolios</label>
+                        <select id="portfolioPresetSelect" class="w-full md:w-60 h-12 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base">
+                            <option value="jguxd">JGuxd portfolio</option>
+                            <option value="all-weather">All-Weather</option>
+                            <option value="50-50">50/50</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Portfolio Description Section -->
+                <div id="portfolioDescription" class="flex-1 w-full mt-4 md:mt-0 p-0 text-base text-gray-700">
+                    <!-- Description text will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <div class="calculator-container">
+                <!-- Total Portfolio Amount Input -->
+                <div class="mb-8 p-4 bg-blue-50 rounded-lg shadow-sm flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                    <label for="totalPortfolioAmountInput" class="text-lg font-semibold text-gray-700">Total Portfolio Amount ($):</label>
+                    <input type="text" id="totalPortfolioAmountInput" value="100,000.00" min="0" step="100"
+                           class="w-full sm:w-auto text-lg text-center font-bold text-blue-800 border-blue-300">
+                </div>
+
+                <!-- User Input Section -->
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Asset Allocations</h2>
+
+                <!-- Column Headers for User Input using Grid -->
+                <div class="hidden sm:grid asset-grid px-4 py-2 text-sm text-gray-600 uppercase font-semibold">
+                    <div class="text-left">Asset Name/Symbol</div>
+                    <div class="text-left">Asset Type</div>
+                    <div class="text-center">Amount ($)</div>
+                    <div class="text-center">Percentage (%)</div>
+                    <div></div> <!-- Empty header for X column -->
+                </div>
+
+                <div id="userAssetsContainer" class="space-y-4 mb-6">
+                    <!-- User-defined assets will be added here by JavaScript -->
+                </div>
+
+                <!-- New: Blank line item for adding assets -->
+                <div id="newAssetRow" class="asset-row-wrapper">
+                    <div class="asset-grid">
+                        <div class="flex flex-col gap-1">
+                            <input type="text" id="new-asset-name" placeholder="Asset Name/Symbol" value="" class="text-lg font-medium text-gray-700 asset-name-input">
+                            <div class="full-asset-name-wrapper">
+                                <span id="new-full-asset-name-display" class="full-asset-name-text" data-placeholder="Full Asset Name (Click to add)"></span>
+                                <input type="text" id="new-full-asset-name-input" placeholder="Full Asset Name" value="" class="full-asset-name-input-field" style="display: none;">
+                            </div>
+                        </div>
+                        <select id="new-asset-category" class="asset-type-dropdown"></select>
+                        <input type="text" id="new-asset-amount" placeholder="Amount ($)" value="0.00" min="0" step="0.01" class="text-lg text-center">
+                        <input type="text" id="new-asset-percentage" placeholder="Percentage (%)" value="0.00" min="0" step="0.01" class="text-lg text-center">
+                        <button id="addNewAssetBtn" class="add-asset-button-in-row rounded-full">
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <!-- New: Total User Entered Line Items Summary -->
+                <div class="asset-row-wrapper bg-blue-100 font-bold text-blue-800">
+                    <div class="asset-grid items-center">
+                        <div class="p-2">TOTAL:</div>
+                        <div></div> <!-- Placeholder for Asset Type column alignment -->
+                        <div class="text-center" id="totalEnteredAmount"></div>
+                        <div class="text-center" id="totalEnteredPercentage"></div>
+                        <div class="flex justify-center">
+                            <!-- Removed Save Portfolio button -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center space-x-4 mb-6 mt-6">
+                    <!-- Add Asset button moved into the newAssetRow -->
+                </div>
+
+                <!-- Summary and Error Messages -->
+                <div class="border-t-2 border-gray-200 pt-6 mt-6">
+                    <div id="statusMessage" class="message-box message-info text-center">
+                        Initializing...
+                    </div>
+                </div>
+
+                <!-- Portfolio Comparison Table -->
+                <h2 class="text-2xl font-semibold text-gray-800 my-6">Portfolio Comparison</h2>
+                <div class="overflow-x-auto rounded-xl shadow-md">
+                    <table class="min-w-full bg-white rounded-xl">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Category</th>
+                                <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Recommended (%)</th>
+                                <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Your Allocated (%)</th>
+                                <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Difference (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="portfolioTableBody">
+                            <!-- Table rows will be generated here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Asset Allocation Pie Chart Section -->
+                <h2 class="text-2xl font-semibold text-gray-800 my-6">Asset Allocation Pie Chart</h2>
+                <div class="flex justify-center items-center p-4 bg-gray-50 rounded-lg shadow-sm" style="width: 100%; min-height: 400px; margin: 0 auto;">
+                    <canvas id="portfolioPieChart" class="w-full h-full"></canvas>
+                </div>
+
+                <!-- Educational Content Area -->
+                <div id="educationalContent" class="mt-8">
+                    <!-- JGuxd Portfolio Education -->
+                    <div id="jguxd-education">
+                        <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
+                            <h2 class="text-2xl font-bold mb-4">Ray Dalio's All Weather Portfolio vs Top Stocks Alternative</h2>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                The All Weather portfolio is designed to perform well across different economic environments by balancing risk contributions rather than dollar amounts.
+                            </p>
+                
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Original Ray Dalio All Weather Asset Allocation</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                The traditional All Weather portfolio is built with the following allocation:
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">30% Stocks:</strong> (US Equity Market)</li>
+                                <li><strong class="font-semibold">40% Long-term Bonds:</strong> (20+ year Treasury bonds)</li>
+                                <li><strong class="font-semibold">15% Intermediate-term Bonds:</strong> (7-10 year Treasury bonds)</li>
+                                <li><strong class="font-semibold">7.5% Commodities:</strong> (Broad commodities exposure)</li>
+                                <li><strong class="font-semibold">7.5% Gold:</strong> (Inflation hedge)</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Key Principles:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">Risk Parity Approach:</strong> Each asset class contributes equally to portfolio risk</li>
+                                <li><strong class="font-semibold">Economic Environment Diversification:</strong> Performs across different growth/inflation scenarios</li>
+                                <li><strong class="font-semibold">Lower Volatility:</strong> Designed to reduce drawdowns compared to traditional stock/bond portfolios</li>
+                                <li><strong class="font-semibold">All Weather:</strong> Works in rising/falling growth and rising/falling inflation environments</li>
+                            </ul>
+                
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Top Stocks Alternative Portfolio</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                Replacing the All Weather allocation with top-performing individual stocks while maintaining similar sector/style diversification:
+                            </p>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Stock-Based All Weather Allocation:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 ml-4">
+                                <li class="mb-4">
+                                    <strong class="font-semibold">Stocks (30%):</strong> (replacing general stocks)
+                                    <ul class="list-circle list-inside ml-4 mt-2">
+                                        <li>7.5% Apple (AAPL) - Large cap tech leader</li>
+                                        <li>7.5% Microsoft (MSFT) - Cloud/software dominance</li>
+                                        <li><span class="text-purple-600">7.5% NVIDIA (NVDA) - AI/semiconductor leader</span></li>
+                                        <li>7.5% Amazon (AMZN) - E-commerce/cloud giant</li>
+                                    </ul>
+                                </li>
+                                <li class="mb-4">
+                                    <strong class="font-semibold">Long-Term Bonds (40%):</strong> (replacing long-term bonds)
+                                    <ul class="list-circle list-inside ml-4 mt-2">
+                                        <li><span class="text-purple-600">10% Berkshire Hathaway (BRK.B) - Diversified value holding</span></li>
+                                        <li>10% Johnson & Johnson (JNJ) - Defensive healthcare</li>
+                                        <li>10% Procter & Gamble (PG) - Consumer staples</li>
+                                        <li>10% Coca-Cola (KO) - Dividend aristocrat</li>
+                                    </ul>
+                                </li>
+                                <li class="mb-4">
+                                    <strong class="font-semibold">Intermediate-Term Bonds (15%):</strong> (replacing intermediate bonds)
+                                    <ul class="list-circle list-inside ml-4 mt-2">
+                                        <li>5% Verizon (VZ) - High dividend telecom</li>
+                                        <li><span class="text-purple-600">5% AT&T (T) - Dividend-focused utility-like</span></li>
+                                        <li>5% Realty Income (O) - Monthly dividend REIT</li>
+                                    </ul>
+                                </li>
+                                <li class="mb-4">
+                                    <strong class="font-semibold">Commodities (7.5%):</strong> (replacing commodities)
+                                    <ul class="list-circle list-inside ml-4 mt-2">
+                                        <li>3.75% ExxonMobil (XOM) - Energy/oil exposure</li>
+                                        <li><span class="text-purple-600">3.75% Freeport-McMoRan (FCX) - Copper/mining</span></li>
+                                    </ul>
+                                </li>
+                                <li class="mb-4">
+                                    <strong class="font-semibold">Gold (7.5%):</strong> (replacing gold)
+                                    <ul class="list-circle list-inside ml-4 mt-2">
+                                        <li><span class="text-purple-600">3.75% Newmont (NEM) - Gold mining leader</span></li>
+                                        <li>3.75% Barrick Gold (GOLD) - Global gold producer</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Key Differences & Considerations</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Advantages of Stock Version:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">Higher Growth Potential:</strong> Individual stocks can significantly outperform bonds</li>
+                                <li><strong class="font-semibold">No Interest Rate Risk:</strong> Less sensitive to rising rates than bond portfolios</li>
+                                <li><strong class="font-semibold">Inflation Protection:</strong> Many stocks naturally adjust for inflation over time</li>
+                                <li><strong class="font-semibold">Active Management:</strong> Can rotate between individual names as fundamentals change</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Disadvantages of Stock Version:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">Higher Volatility:</strong> Individual stocks are much more volatile than bonds</li>
+                                <li><strong class="font-semibold">Concentration Risk:</strong> Single company risk vs. diversified bond exposure</li>
+                                <li><strong class="font-semibold">Correlation Risk:</strong> Stocks tend to be more correlated during market stress</li>
+                                <li><strong class="font-semibold">No True "Safe Haven":</strong> Lacks the stability that government bonds provide</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Risk Profile Comparison:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">Original All Weather:</strong> Lower volatility, stable income, true diversification</li>
+                                <li><strong class="font-semibold">Stock Alternative:</strong> Higher volatility, higher growth potential, equity-heavy correlation</li>
+                            </ul>
+                
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Implementation Notes</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">For the Stock Version:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>Consider position sizing based on volatility (lower allocations to higher-volatility names)</li>
+                                <li>Regular rebalancing is more critical due to stock price movements</li>
+                                <li>May want to include some actual bonds (10-20%) for true diversification</li>
+                                <li>Consider ETFs for some allocations to reduce single-stock risk</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Risk Management:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>The stock version essentially becomes a diversified equity portfolio</li>
+                                <li>Consider it more of a "growth weather" than "all weather" strategy</li>
+                                <li>May perform poorly in deflationary environments where bonds excel</li>
+                                <li>Requires more active monitoring and potential adjustments</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- All-Weather Portfolio Education -->
+                    <div id="all-weather-education" style="display: none;">
+                        <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
+                            <h2 class="text-2xl font-bold mb-4">Ray Dalio's All Weather Portfolio - Easy Guide</h2>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">What Is It?</strong>
+                                <br>
+                                The All Weather Portfolio is a simple investing strategy that works in any economic condition. Created by billionaire investor Ray Dalio, it splits your money across different types of investments so you make money whether the economy is growing or shrinking, and whether prices are going up or down.
+                            </p>
+                
+                            <h3 class="text-xl font-semibold mt-6 mb-2">The Exact Asset Allocation</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                Here's exactly how to split your money:
+                            </p>
+                            <div class="overflow-x-auto rounded-xl shadow-md">
+                                <table class="min-w-full bg-gray-50 rounded-xl">
+                                    <thead>
+                                        <tr class="bg-gray-200">
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Investment Type</th>
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Percentage</th>
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">What It Does</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">Stocks</td>
+                                            <td class="py-3 px-4 text-gray-700">30%</td>
+                                            <td class="py-3 px-4 text-gray-700">Makes money when economy grows</td>
+                                        </tr>
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">Long-term Bonds</td>
+                                            <td class="py-3 px-4 text-gray-700">40%</td>
+                                            <td class="py-3 px-4 text-gray-700">Makes money when economy struggles</td>
+                                        </tr>
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">Intermediate-term Bonds</td>
+                                            <td class="py-3 px-4 text-gray-700">15%</td>
+                                            <td class="py-3 px-4 text-gray-700">Steady income, less risky</td>
+                                        </tr>
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">Commodities</td>
+                                            <td class="py-3 px-4 text-gray-700">7.5%</td>
+                                            <td class="py-3 px-4 text-gray-700">Protection against rising prices</td>
+                                        </tr>
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">Gold</td>
+                                            <td class="py-3 px-4 text-gray-700">7.5%</td>
+                                            <td class="py-3 px-4 text-gray-700">Safe haven when everything else fails</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-base font-normal text-gray-700 mb-4 mt-4">
+                                What you own: Every major US company + US government and corporate bonds.
+                            </p>
+
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Why It Works</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                Stocks and bonds are like a seesaw:
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>When stocks go up → bonds stay steady</li>
+                                <li>When stocks crash → bonds go up</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                Result: Steady growth with much less drama.
+                                <br>
+                                Historical performance: ~7% per year with way fewer big drops than stocks alone.
+                            </p>
+
+                            <h3 class="text-xl font-semibold mt-6 mb-2">How to Do It</h3>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">Buy:</strong> 50% VTI, 50% BND at any major broker</li>
+                                <li><strong class="font-semibold">Cost:</strong> Both funds charge 0.03% (almost free)</li>
+                                <li><strong class="font-semibold">Rebalance:</strong> Once per year, get back to exactly 50/50</li>
+                                <li><strong class="font-semibold">Automate:</strong> Set up monthly auto-investing in both funds</li>
+                            </ul>
+                
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Pros & Cons</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Good:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>Dead simple (just 2 funds)</li>
+                                <li>Much less stressful than all stocks</li>
+                                <li>Great for beginners</li>
+                                <li>Low fees</li>
+                                <li>Works in most market conditions</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Bad:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>Lower returns than all-stock portfolios</li>
+                                <li>Bonds can lose money when interest rates rise</li>
+                                <li>"Boring" (but that's kind of the point)</li>
+                            </ul>
+
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Perfect For</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">You if:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>Want simple and stress-free investing</li>
+                                <li>Are just starting out</li>
+                                <li>Get nervous about big market swings</li>
+                                <li>Value sleep over maximum returns</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Maybe not if:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>You're young and want maximum growth</li>
+                                <li>You can handle big ups and downs for bigger gains</li>
+                            </ul>
+                
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Bottom Line</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Trade-off:</strong> Give up some potential gains for much more predictable results.
+                            </p>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Philosophy:</strong> "I want steady growth without the drama."
+                            </p>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Truth:</strong> This boring strategy beats most "exciting" approaches over 20+ years.
+                            </p>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                Remember: The best strategy is the one you'll actually stick with.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 50/50 Portfolio Education (Empty) -->
+                    <div id="50-50-education" style="display: none;">
+                        <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
+                            <h2 class="text-2xl font-bold mb-4">50/50 Portfolio - VTI & BND Quick Guide</h2>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">What Is It?</strong>
+                                <br>
+                                The simplest investing strategy ever: 50% stocks (VTI) and 50% bonds (BND). That's it.
+                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-2">The Allocation</h3>
+                            <div class="overflow-x-auto rounded-xl shadow-md">
+                                <table class="min-w-full bg-gray-50 rounded-xl">
+                                    <thead>
+                                        <tr class="bg-gray-200">
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">ETF</th>
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">What It Is</th>
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Percentage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">VTI</td>
+                                            <td class="py-3 px-4 text-gray-700">Total US Stock Market</td>
+                                            <td class="py-3 px-4 text-gray-700">50%</td>
+                                        </tr>
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">BND</td>
+                                            <td class="py-3 px-4 text-gray-700">Total US Bond Market</td>
+                                            <td class="py-3 px-4 text-gray-700">50%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-base font-normal text-gray-700 mb-4 mt-4">
+                                What you own: Every major US company + US government and corporate bonds.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Horizontal line separator -->
+        <hr class="border-t border-gray-300 my-0" />
+
+        <!-- Footer Section -->
+        <footer>
+            <div class="px-4 sm:px-6 lg:px-8 text-center py-4 text-gray-900 text-sm">
+                <p>&copy; 2024 JGUXD Asset Calculator. All rights reserved.</p>
+            </div>
+        </footer>
+
     </div>
-
-    <div class="calculator-container">
-        <!-- Removed the old h1 tag as the new header replaces it -->
-
-        <!-- Total Portfolio Amount Input -->
-        <div class="mb-8 p-4 bg-blue-50 rounded-lg shadow-sm flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <label for="totalPortfolioAmountInput" class="text-lg font-semibold text-gray-700">Total Portfolio Amount ($):</label>
-            <input type="text" id="totalPortfolioAmountInput" value="100,000.00" min="0" step="100"
-                    class="w-full sm:w-auto text-lg text-center font-bold text-blue-800 border-blue-300">
-        </div>
-
-        <!-- User Input Section -->
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Asset Allocations</h2>
-
-        <!-- Column Headers for User Input using Grid -->
-        <div class="hidden sm:grid asset-grid px-4 py-2 text-sm text-gray-600 uppercase font-semibold">
-            <div class="text-left">Asset Name/Symbol</div>
-            <div class="text-left">Asset Type</div>
-            <div class="text-center">Amount ($)</div>
-            <div class="text-center">Percentage (%)</div>
-            <div></div> <!-- Empty header for X column -->
-        </div>
-
-        <div id="userAssetsContainer" class="space-y-4 mb-6">
-            <!-- User-defined assets will be added here by JavaScript -->
-        </div>
-
-        <!-- New: Blank line item for adding assets -->
-        <div id="newAssetRow" class="asset-row-wrapper">
-            <div class="asset-grid">
-                <div class="flex flex-col gap-1">
-                    <input type="text" id="new-asset-name" placeholder="Asset Name/Symbol" value="" class="text-lg font-medium text-gray-700 asset-name-input">
-                    <div class="full-asset-name-wrapper">
-                        <span id="new-full-asset-name-display" class="full-asset-name-text" data-placeholder="Full Asset Name (Click to add)"></span>
-                        <input type="text" id="new-full-asset-name-input" placeholder="Full Asset Name" value="" class="full-asset-name-input-field" style="display: none;">
-                    </div>
-                </div>
-                <select id="new-asset-category" class="asset-type-dropdown"></select>
-                <input type="text" id="new-asset-amount" placeholder="Amount ($)" value="0.00" min="0" step="0.01" class="text-lg text-center">
-                <input type="text" id="new-asset-percentage" placeholder="Percentage (%)" value="0.00" min="0" step="0.01" class="text-lg text-center">
-                <button id="addNewAssetBtn" class="add-asset-button-in-row rounded-full">
-                    +
-                </button>
-            </div>
-        </div>
-
-        <!-- New: Total User Entered Line Items Summary -->
-        <div class="asset-row-wrapper bg-blue-100 font-bold text-blue-800">
-            <div class="asset-grid items-center">
-                <div class="p-2">TOTAL:</div>
-                <div></div> <!-- Placeholder for Asset Type column alignment -->
-                <div class="text-center" id="totalEnteredAmount"></div>
-                <div class="text-center" id="totalEnteredPercentage"></div>
-                <div class="flex justify-center">
-                    <!-- Removed Save Portfolio button -->
-                </div>
-            </div>
-        </div>
-
-
-        <div class="flex justify-center space-x-4 mb-6 mt-6">
-            <!-- Add Asset button moved into the newAssetRow -->
-        </div>
-
-        <!-- Summary and Error Messages -->
-        <div class="border-t-2 border-gray-200 pt-6 mt-6">
-            <div id="statusMessage" class="message-box message-info text-center">
-                Initializing...
-            </div>
-        </div>
-
-        <!-- Portfolio Comparison Table -->
-        <h2 class="text-2xl font-semibold text-gray-800 my-6">Portfolio Comparison</h2>
-        <div class="overflow-x-auto rounded-xl shadow-md">
-            <table class="min-w-full bg-white rounded-xl">
-                <thead>
-                    <tr>
-                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Category</th>
-                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Recommended (%)</th>
-                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Your Allocated (%)</th>
-                        <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Difference (%)</th>
-                    </tr>
-                </thead>
-                <tbody id="portfolioTableBody">
-                    <!-- Table rows will be generated here by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Asset Allocation Pie Chart Section -->
-        <h2 class="text-2xl font-semibold text-gray-800 my-6">Asset Allocation Pie Chart</h2>
-        <div class="flex justify-center items-center p-4 bg-gray-50 rounded-lg shadow-sm" style="width: 100%; min-height: 400px; margin: 0 auto;">
-            <canvas id="portfolioPieChart" class="w-full h-full"></canvas>
-        </div>
-
-        <!-- Educational Content Area -->
-        <div id="educationalContent" class="mt-8">
-            <!-- JGuxd Portfolio Education -->
-            <div id="jguxd-education">
-                <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
-                    <h2 class="text-2xl font-bold mb-4">Ray Dalio's All Weather Portfolio vs Top Stocks Alternative</h2>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        The All Weather portfolio is designed to perform well across different economic environments by balancing risk contributions rather than dollar amounts.
-                    </p>
-        
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Original Ray Dalio All Weather Asset Allocation</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        The traditional All Weather portfolio is built with the following allocation:
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li><strong class="font-semibold">30% Stocks:</strong> (US Equity Market)</li>
-                        <li><strong class="font-semibold">40% Long-term Bonds:</strong> (20+ year Treasury bonds)</li>
-                        <li><strong class="font-semibold">15% Intermediate-term Bonds:</strong> (7-10 year Treasury bonds)</li>
-                        <li><strong class="font-semibold">7.5% Commodities:</strong> (Broad commodities exposure)</li>
-                        <li><strong class="font-semibold">7.5% Gold:</strong> (Inflation hedge)</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Key Principles:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li><strong class="font-semibold">Risk Parity Approach:</strong> Each asset class contributes equally to portfolio risk</li>
-                        <li><strong class="font-semibold">Economic Environment Diversification:</strong> Performs across different growth/inflation scenarios</li>
-                        <li><strong class="font-semibold">Lower Volatility:</strong> Designed to reduce drawdowns compared to traditional stock/bond portfolios</li>
-                        <li><strong class="font-semibold">All Weather:</strong> Works in rising/falling growth and rising/falling inflation environments</li>
-                    </ul>
-        
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Top Stocks Alternative Portfolio</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Replacing the All Weather allocation with top-performing individual stocks while maintaining similar sector/style diversification:
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Stock-Based All Weather Allocation:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 ml-4">
-                        <li class="mb-4">
-                            <strong class="font-semibold">Stocks (30%):</strong> (replacing general stocks)
-                            <ul class="list-circle list-inside ml-4 mt-2">
-                                <li>7.5% Apple (AAPL) - Large cap tech leader</li>
-                                <li>7.5% Microsoft (MSFT) - Cloud/software dominance</li>
-                                <li><span class="text-purple-600">7.5% NVIDIA (NVDA) - AI/semiconductor leader</span></li>
-                                <li>7.5% Amazon (AMZN) - E-commerce/cloud giant</li>
-                            </ul>
-                        </li>
-                        <li class="mb-4">
-                            <strong class="font-semibold">Long-Term Bonds (40%):</strong> (replacing long-term bonds)
-                            <ul class="list-circle list-inside ml-4 mt-2">
-                                <li><span class="text-purple-600">10% Berkshire Hathaway (BRK.B) - Diversified value holding</span></li>
-                                <li>10% Johnson & Johnson (JNJ) - Defensive healthcare</li>
-                                <li>10% Procter & Gamble (PG) - Consumer staples</li>
-                                <li>10% Coca-Cola (KO) - Dividend aristocrat</li>
-                            </ul>
-                        </li>
-                        <li class="mb-4">
-                            <strong class="font-semibold">Intermediate-Term Bonds (15%):</strong> (replacing intermediate bonds)
-                            <ul class="list-circle list-inside ml-4 mt-2">
-                                <li>5% Verizon (VZ) - High dividend telecom</li>
-                                <li><span class="text-purple-600">5% AT&T (T) - Dividend-focused utility-like</span></li>
-                                <li>5% Realty Income (O) - Monthly dividend REIT</li>
-                            </ul>
-                        </li>
-                        <li class="mb-4">
-                            <strong class="font-semibold">Commodities (7.5%):</strong> (replacing commodities)
-                            <ul class="list-circle list-inside ml-4 mt-2">
-                                <li>3.75% ExxonMobil (XOM) - Energy/oil exposure</li>
-                                <li><span class="text-purple-600">3.75% Freeport-McMoRan (FCX) - Copper/mining</span></li>
-                            </ul>
-                        </li>
-                        <li class="mb-4">
-                            <strong class="font-semibold">Gold (7.5%):</strong> (replacing gold)
-                            <ul class="list-circle list-inside ml-4 mt-2">
-                                <li><span class="text-purple-600">3.75% Newmont (NEM) - Gold mining leader</span></li>
-                                <li>3.75% Barrick Gold (GOLD) - Global gold producer</li>
-                            </ul>
-                        </li>
-                    </ul>
-        
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Key Differences & Considerations</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Advantages of Stock Version:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li><strong class="font-semibold">Higher Growth Potential:</strong> Individual stocks can significantly outperform bonds</li>
-                        <li><strong class="font-semibold">No Interest Rate Risk:</strong> Less sensitive to rising rates than bond portfolios</li>
-                        <li><strong class="font-semibold">Inflation Protection:</strong> Many stocks naturally adjust for inflation over time</li>
-                        <li><strong class="font-semibold">Active Management:</strong> Can rotate between individual names as fundamentals change</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Disadvantages of Stock Version:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li><strong class="font-semibold">Higher Volatility:</strong> Individual stocks are much more volatile than bonds</li>
-                        <li><strong class="font-semibold">Concentration Risk:</strong> Single company risk vs. diversified bond exposure</li>
-                        <li><strong class="font-semibold">Correlation Risk:</strong> Stocks tend to be more correlated during market stress</li>
-                        <li><strong class="font-semibold">No True "Safe Haven":</strong> Lacks the stability that government bonds provide</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Risk Profile Comparison:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li><strong class="font-semibold">Original All Weather:</strong> Lower volatility, stable income, true diversification</li>
-                        <li><strong class="font-semibold">Stock Alternative:</strong> Higher volatility, higher growth potential, equity-heavy correlation</li>
-                    </ul>
-        
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Implementation Notes</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">For the Stock Version:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Consider position sizing based on volatility (lower allocations to higher-volatility names)</li>
-                        <li>Regular rebalancing is more critical due to stock price movements</li>
-                        <li>May want to include some actual bonds (10-20%) for true diversification</li>
-                        <li>Consider ETFs for some allocations to reduce single-stock risk</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Risk Management:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>The stock version essentially becomes a diversified equity portfolio</li>
-                        <li>Consider it more of a "growth weather" than "all weather" strategy</li>
-                        <li>May perform poorly in deflationary environments where bonds excel</li>
-                        <li>Requires more active monitoring and potential adjustments</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- All-Weather Portfolio Education -->
-            <div id="all-weather-education" style="display: none;">
-                <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
-                    <h2 class="text-2xl font-bold mb-4">Ray Dalio's All Weather Portfolio - Easy Guide</h2>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">What Is It?</strong>
-                        <br>
-                        The All Weather Portfolio is a simple investing strategy that works in any economic condition. Created by billionaire investor Ray Dalio, it splits your money across different types of investments so you make money whether the economy is growing or shrinking, and whether prices are going up or down.
-                    </p>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">The Exact Asset Allocation</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Here's exactly how to split your money:
-                    </p>
-                    <div class="overflow-x-auto rounded-xl shadow-md">
-                        <table class="min-w-full bg-gray-50 rounded-xl">
-                            <thead>
-                                <tr class="bg-gray-200">
-                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Investment Type</th>
-                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Percentage</th>
-                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">What It Does</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr class="bg-white">
-                                    <td class="py-3 px-4 text-gray-900">Stocks</td>
-                                    <td class="py-3 px-4 text-gray-700">30%</td>
-                                    <td class="py-3 px-4 text-gray-700">Makes money when economy grows</td>
-                                </tr>
-                                <tr class="bg-white">
-                                    <td class="py-3 px-4 text-gray-900">Long-term Bonds</td>
-                                    <td class="py-3 px-4 text-gray-700">40%</td>
-                                    <td class="py-3 px-4 text-gray-700">Makes money when economy struggles</td>
-                                </tr>
-                                <tr class="bg-white">
-                                    <td class="py-3 px-4 text-gray-900">Intermediate-term Bonds</td>
-                                    <td class="py-3 px-4 text-gray-700">15%</td>
-                                    <td class="py-3 px-4 text-gray-700">Steady income, less risky</td>
-                                </tr>
-                                <tr class="bg-white">
-                                    <td class="py-3 px-4 text-gray-900">Commodities</td>
-                                    <td class="py-3 px-4 text-gray-700">7.5%</td>
-                                    <td class="py-3 px-4 text-gray-700">Protection against rising prices</td>
-                                </tr>
-                                <tr class="bg-white">
-                                    <td class="py-3 px-4 text-gray-900">Gold</td>
-                                    <td class="py-3 px-4 text-gray-700">7.5%</td>
-                                    <td class="py-3 px-4 text-gray-700">Safe haven when everything else fails</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p class="text-base font-normal text-gray-700 mb-4 mt-4">
-                        <strong class="font-semibold">Why This Mix Works:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li><strong class="font-semibold">Balanced Risk</strong> - No single investment can hurt you badly</li>
-                        <li><strong class="font-semibold">Always Protected</strong> - Something always does well</li>
-                        <li><strong class="font-semibold">Simple to Follow</strong> - Set it and forget it</li>
-                    </ul>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">The 4 Economic "Weather" Conditions</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Think of the economy like weather. There are only 4 types:
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-3 ml-4 mb-4">
-                        <li><strong class="font-semibold">Growing Economy + Rising Prices</strong>
-                            <p class="text-sm italic text-gray-600 mt-1">What happens: Companies make more money, but things get expensive</p>
-                            <p class="text-sm italic text-gray-600">What works: Stocks, Commodities</p>
-                        </li>
-                        <li><strong class="font-semibold">Growing Economy + Falling Prices</strong>
-                            <p class="text-sm italic text-gray-600 mt-1">What happens: Companies make money AND things get cheaper</p>
-                            <p class="text-sm italic text-gray-600">What works: Stocks, Bonds</p>
-                        </li>
-                        <li><strong class="font-semibold">Shrinking Economy + Rising Prices</strong>
-                            <p class="text-sm italic text-gray-600 mt-1">What happens: Recession but prices still go up (like the 1970s)</p>
-                            <p class="text-sm italic text-gray-600">What works: Commodities, Gold</p>
-                        </li>
-                        <li><strong class="font-semibold">Shrinking Economy + Falling Prices</strong>
-                            <p class="text-sm italic text-gray-600 mt-1">What happens: Recession and deflation (like the 1930s)</p>
-                            <p class="text-sm italic text-gray-600">What works: Bonds, Gold</p>
-                        </li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        The Key: Most portfolios only work in 1-2 weather conditions. This one works in ALL 4.
-                    </p>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Why Ray Dalio Created This</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">The Big Problem with Normal Investing:</strong>
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Most people put 60% in stocks and 40% in bonds. But here's the issue:
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Stocks are 10 times riskier than bonds</li>
-                        <li>So 60% stocks = 90% of your risk</li>
-                        <li>You're basically betting everything on stocks going up</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Ray's Solution:</strong>
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Instead of splitting money equally, split RISK equally:
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Each investment type gets the same amount of risk</li>
-                        <li>No single investment can destroy your portfolio</li>
-                        <li>You still make good returns over time</li>
-                    </ul>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Real-World Performance</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">What History Shows:</strong>
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        This strategy has worked through:
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>1970s inflation crisis</li>
-                        <li>1980s recession</li>
-                        <li>2000 tech crash</li>
-                        <li>2008 financial crisis</li>
-                        <li>Every major economic event since 1970</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">The Results:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Lower ups and downs than stock-heavy portfolios</li>
-                        <li>Steady growth over long periods</li>
-                        <li>Never gets destroyed in any single crisis</li>
-                    </ul>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">How to Actually Do This</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Step 1: Buy These Investments</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Stocks: Total Stock Market Index Fund</li>
-                        <li>Long Bonds: 20+ Year Treasury Bond Fund</li>
-                        <li>Medium Bonds: 7-10 Year Treasury Bond Fund</li>
-                        <li>Commodities: Commodity Index Fund</li>
-                        <li>Gold: Gold ETF or Physical Gold</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Step 2: Set the Percentages</strong>
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Use the exact percentages from the table above.
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Step 3: Rebalance Once a Year</strong>
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Check once per year and adjust back to the target percentages.
-                    </p>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Important Things to Know</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">It's Not Exciting</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>You won't get rich quick</li>
-                        <li>Some years will be boring</li>
-                        <li>But you also won't lose everything in crashes</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Perfect for Long-Term Investors</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Works best over 10+ years</li>
-                        <li>Don't check it every day</li>
-                        <li>Trust the process during bad times</li>
-                    </ul>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">The Bottom Line</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Ray Dalio's Message:</strong> "I don't know what tomorrow will bring, but I know this portfolio will do okay no matter what happens."
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">The Goal:</strong> Not to beat the market, but to never get crushed by it.
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Best For:</strong> People who want steady growth without losing sleep during market crashes.
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Remember: This isn't about predicting the future. It's about being prepared for any future.
-                    </p>
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Key Takeaways</h3>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Spread risk, not just money across different investments</li>
-                        <li>Economic conditions always change - be ready for all of them</li>
-                        <li>Simple beats complicated - don't overthink it</li>
-                        <li>Time is your friend - this works over years, not months</li>
-                        <li>Stay balanced - rebalance once per year to maintain the mix</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- 50/50 Portfolio Education (Empty) -->
-            <div id="50-50-education" style="display: none;">
-                <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
-                    <h2 class="text-2xl font-bold mb-4">50/50 Portfolio - VTI & BND Quick Guide</h2>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">What Is It?</strong>
-                        <br>
-                        The simplest investing strategy ever: 50% stocks (VTI) and 50% bonds (BND). That's it.
-                    </p>
-                    <h3 class="text-xl font-semibold mt-6 mb-2">The Allocation</h3>
-                    <div class="overflow-x-auto rounded-xl shadow-md">
-                        <table class="min-w-full bg-gray-50 rounded-xl">
-                            <thead>
-                                <tr class="bg-gray-200">
-                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">ETF</th>
-                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">What It Is</th>
-                                    <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Percentage</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr class="bg-white">
-                                    <td class="py-3 px-4 text-gray-900">VTI</td>
-                                    <td class="py-3 px-4 text-gray-700">Total US Stock Market</td>
-                                    <td class="py-3 px-4 text-gray-700">50%</td>
-                                </tr>
-                                <tr class="bg-white">
-                                    <td class="py-3 px-4 text-gray-900">BND</td>
-                                    <td class="py-3 px-4 text-gray-700">Total US Bond Market</td>
-                                    <td class="py-3 px-4 text-gray-700">50%</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <p class="text-base font-normal text-gray-700 mb-4 mt-4">
-                        What you own: Every major US company + US government and corporate bonds.
-                    </p>
-
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Why It Works</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Stocks and bonds are like a seesaw:
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>When stocks go up → bonds stay steady</li>
-                        <li>When stocks crash → bonds go up</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Result: Steady growth with much less drama.
-                        <br>
-                        Historical performance: ~7% per year with way fewer big drops than stocks alone.
-                    </p>
-
-                    <h3 class="text-xl font-semibold mt-6 mb-2">How to Do It</h3>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li><strong class="font-semibold">Buy:</strong> 50% VTI, 50% BND at any major broker</li>
-                        <li><strong class="font-semibold">Cost:</strong> Both funds charge 0.03% (almost free)</li>
-                        <li><strong class="font-semibold">Rebalance:</strong> Once per year, get back to exactly 50/50</li>
-                        <li><strong class="font-semibold">Automate:</strong> Set up monthly auto-investing in both funds</li>
-                    </ul>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Pros & Cons</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Good:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Dead simple (just 2 funds)</li>
-                        <li>Much less stressful than all stocks</li>
-                        <li>Great for beginners</li>
-                        <li>Low fees</li>
-                        <li>Works in most market conditions</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Bad:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Lower returns than all-stock portfolios</li>
-                        <li>Bonds can lose money when interest rates rise</li>
-                        <li>"Boring" (but that's kind of the point)</li>
-                    </ul>
-
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Perfect For</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">You if:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>Want simple and stress-free investing</li>
-                        <li>Are just starting out</li>
-                        <li>Get nervous about big market swings</li>
-                        <li>Value sleep over maximum returns</li>
-                    </ul>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Maybe not if:</strong>
-                    </p>
-                    <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                        <li>You're young and want maximum growth</li>
-                        <li>You can handle big ups and downs for bigger gains</li>
-                    </ul>
-            
-                    <h3 class="text-xl font-semibold mt-6 mb-2">Bottom Line</h3>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Trade-off:</strong> Give up some potential gains for much more predictable results.
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Philosophy:</strong> "I want steady growth without the drama."
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        <strong class="font-semibold">Truth:</strong> This boring strategy beats most "exciting" approaches over 20+ years.
-                    </p>
-                    <p class="text-base font-normal text-gray-700 mb-4">
-                        Remember: The best strategy is the one you'll actually stick with.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- End of main container -->
 
     <script type="module">
         // Firebase imports
@@ -892,11 +794,18 @@
             'Stocks': '#4CAF50',        // Green
             'Long-Term Bonds': '#2196F3', // Blue
             'Intermediate-Term Bonds': '#03A9F4', // Lighter Blue
-            'Gold': '#FFD700',          // Gold
-            'Commodities': '#FF9800',   // Orange
+            'Gold': '#FFD700',         // Gold
+            'Commodities': '#FF9800',  // Orange
             'Other (Not Categorized)': '#9E9E9E' // Gray
         };
         
+        // --- Portfolio Descriptions for the new feature ---
+        const PORTFOLIO_DESCRIPTIONS = {
+            'jguxd': "This is a custom-designed portfolio with a mix of high-growth tech stocks and defensive value holdings. It aims to blend aggressive growth with some stability.",
+            'all-weather': "Inspired by Ray Dalio, this portfolio is built to perform consistently well across different economic conditions (rising/falling growth and inflation).",
+            '50-50': "A classic, simple portfolio that allocates half of its assets to stocks for growth and half to bonds for stability."
+        };
+
         // --- Global Variables ---
         let userAssets = []; // Stores user-entered asset data
         let assetIdCounter = 0; // Ensures unique IDs for new assets
@@ -912,10 +821,11 @@
         const newFullAssetNameDisplay = document.getElementById('new-full-asset-name-display');
         const newFullAssetNameInput = document.getElementById('new-full-asset-name-input');
         const portfolioPresetSelect = document.getElementById('portfolioPresetSelect');
+        const portfolioDescriptionDiv = document.getElementById('portfolioDescription'); // New element
         const jguxdEducationDiv = document.getElementById('jguxd-education');
         const allWeatherEducationDiv = document.getElementById('all-weather-education');
         const fiftyFiftyEducationDiv = document.getElementById('50-50-education');
-
+        const portfolioImage = document.getElementById('portfolioImage');
 
         const statusMessage = document.getElementById('statusMessage'); // Replaced totalAllocationMessage for general status
         const portfolioTableBody = document.getElementById('portfolioTableBody');
@@ -1250,7 +1160,7 @@
 
             fullAssetNameInput.addEventListener('blur', (e) => {
                 const newValue = e.target.value;
-                updateAssetData(-1, 'fullName', newValue);
+                updateAssetData(asset.id, 'fullName', newValue);
                 fullAssetNameDisplay.textContent = newValue || fullAssetNameDisplay.dataset.placeholder;
                 fullAssetNameDisplay.style.display = 'block';
                 fullAssetNameInput.style.display = 'none';
@@ -1271,7 +1181,13 @@
             const amountInput = assetWrapperDiv.querySelector(`#asset-amount-${asset.id}`);
             amountInput.addEventListener('input', (e) => {
                 const rawValue = getRawNumberFromFormattedCurrency(e.target.value);
-                updateAssetData(asset.id, 'amount', rawValue);
+                const currentTotalPortfolioAmount = getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value);
+                let calculatedPercentage = 0;
+                if (currentTotalPortfolioAmount > 0) {
+                    calculatedPercentage = (rawValue / currentTotalPortfolioAmount) * 100;
+                }
+                document.getElementById(`asset-percentage-${asset.id}`).value = calculatedPercentage.toFixed(2);
+                updateUserEnteredTotals();
             });
             amountInput.addEventListener('blur', (e) => {
                 e.target.value = cleanAndFormatCurrency(e.target.value);
@@ -1282,7 +1198,13 @@
             const percentageInput = assetWrapperDiv.querySelector(`#asset-percentage-${asset.id}`);
             percentageInput.addEventListener('input', (e) => {
                 const rawValue = parseFloat(String(e.target.value).replace('%','')) || 0;
-                updateAssetData(asset.id, 'percentage', rawValue);
+                const currentTotalPortfolioAmount = getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value);
+                let calculatedAmount = 0;
+                if (currentTotalPortfolioAmount > 0) {
+                    calculatedAmount = (rawValue / 100) * currentTotalPortfolioAmount;
+                }
+                document.getElementById(`asset-amount-${asset.id}`).value = calculatedAmount.toFixed(2);
+                updateUserEnteredTotals();
             });
             percentageInput.addEventListener('blur', (e) => {
                 e.target.value = formatPercentage(e.target.value);
@@ -1331,7 +1253,6 @@
             }
             return assetsForCalculation.reduce((sum, asset) => sum + (parseFloat(asset.percentage) || 0), 0);
         }
-
 
         // Function to validate the total user allocation (percentage) and display messages
         function validateTotalAllocation() {
@@ -1441,25 +1362,35 @@
         // --- Portfolio Preset Data ---
         // Defines the data for the three portfolio presets.
         const PORTFOLIO_PRESETS = {
-            'jguxd': [
-                { name: 'NVDA', fullName: 'NVIDIA', category: 'Stocks', percentage: 25 },
-                { name: 'BRK.B', fullName: 'Berkshire Hathaway', category: 'Long-Term Bonds', percentage: 33.33 },
-                { name: 'T', fullName: 'AT&T', category: 'Intermediate-Term Bonds', percentage: 16.67 },
-                { name: 'FCX', fullName: 'Freeport-McMoRan', category: 'Commodities', percentage: 12.5 },
-                { name: 'NEM', fullName: 'Newmont', category: 'Gold', percentage: 12.5 }
-            ],
-            'all-weather': [
-                { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 30 },
-                { name: 'TLT', fullName: 'iShares 20+ Year Treasury Bond ETF', category: 'Long-Term Bonds', percentage: 40 },
-                { name: 'IEF', fullName: 'iShares 7-10 Year Treasury Bond ETF', category: 'Intermediate-Term Bonds', percentage: 15 },
-                { name: 'GLD', fullName: 'SPDR Gold Shares', category: 'Gold', percentage: 7.5 },
-                { name: 'DBC', fullName: 'Invesco DB Commodity Index Tracking Fund', category: 'Commodities', percentage: 7.5 }
-            ],
-            '50-50': [
-                { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 50 },
-                { name: 'BND', fullName: 'Vanguard Total Bond Market ETF', category: 'Long-Term Bonds', percentage: 50 }
-            ]
+            'jguxd': {
+                image: 'https://placehold.co/80x80/000000/FFFFFF?text=JGUXD',
+                assets: [
+                    { name: 'NVDA', fullName: 'NVIDIA', category: 'Stocks', percentage: 25 },
+                    { name: 'BRK.B', fullName: 'Berkshire Hathaway', category: 'Long-Term Bonds', percentage: 33.33 },
+                    { name: 'T', fullName: 'AT&T', category: 'Intermediate-Term Bonds', percentage: 16.67 },
+                    { name: 'FCX', fullName: 'Freeport-McMoRan', category: 'Commodities', percentage: 12.5 },
+                    { name: 'NEM', fullName: 'Newmont', category: 'Gold', percentage: 12.5 }
+                ]
+            },
+            'all-weather': {
+                image: 'https://placehold.co/80x80/000000/FFFFFF?text=All-%0AWeather',
+                assets: [
+                    { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 30 },
+                    { name: 'TLT', fullName: 'iShares 20+ Year Treasury Bond ETF', category: 'Long-Term Bonds', percentage: 40 },
+                    { name: 'IEF', fullName: 'iShares 7-10 Year Treasury Bond ETF', category: 'Intermediate-Term Bonds', percentage: 15 },
+                    { name: 'GLD', fullName: 'SPDR Gold Shares', category: 'Gold', percentage: 7.5 },
+                    { name: 'DBC', fullName: 'Invesco DB Commodity Index Tracking Fund', category: 'Commodities', percentage: 7.5 }
+                ]
+            },
+            '50-50': {
+                image: 'https://placehold.co/80x80/000000/FFFFFF?text=50/50',
+                assets: [
+                    { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 50 },
+                    { name: 'BND', fullName: 'Vanguard Total Bond Market ETF', category: 'Long-Term Bonds', percentage: 50 }
+                ]
+            }
         };
+        
 
         // --- Event Listeners for the NEW BLANK ASSET ROW INPUTS ---
         newAssetNameInput.addEventListener('input', (e) => {
@@ -1550,24 +1481,39 @@
         // Event listener for the new add asset button in the blank row
         addNewAssetBtn.addEventListener('click', addAssetFromNewRow);
 
+        // Function to update the portfolio description
+        function updatePortfolioDescription(presetKey) {
+            const description = PORTFOLIO_DESCRIPTIONS[presetKey];
+            if (description) {
+                portfolioDescriptionDiv.textContent = description;
+            } else {
+                portfolioDescriptionDiv.textContent = 'Select a portfolio from the dropdown above to learn more about its strategy.';
+            }
+        }
+        
         // Event listener for the new portfolio preset dropdown
         portfolioPresetSelect.addEventListener('change', (e) => {
             const presetKey = e.target.value;
-            const presetAssets = PORTFOLIO_PRESETS[presetKey];
+            const presetData = PORTFOLIO_PRESETS[presetKey];
 
             // Hide all educational content divs
             jguxdEducationDiv.style.display = 'none';
             allWeatherEducationDiv.style.display = 'none';
             fiftyFiftyEducationDiv.style.display = 'none';
+            
+            // Update image source
+            if (portfolioImage) {
+                portfolioImage.src = presetData.image;
+            }
 
-            if (presetAssets) {
+            if (presetData) {
                 // Clear existing assets and UI
                 userAssets = [];
                 userAssetsContainer.innerHTML = '';
                 
                 // Load assets from the selected preset
                 assetIdCounter = 0; // Reset ID counter
-                presetAssets.forEach(assetData => {
+                presetData.assets.forEach(assetData => {
                     addInitialAsset(assetData);
                 });
                 
@@ -1586,6 +1532,8 @@
             } else if (presetKey === '50-50') {
                 fiftyFiftyEducationDiv.style.display = 'block';
             }
+
+            updatePortfolioDescription(presetKey);
         });
 
         // Initial setup on page load
@@ -1605,15 +1553,23 @@
             totalPortfolioAmountInput.value = cleanAndFormatCurrency(initialTotal);
 
             // Load default assets from the 'jguxd' preset
-            PORTFOLIO_PRESETS['jguxd'].forEach(assetData => {
-                addInitialAsset(assetData);
-            });
+            const defaultPreset = PORTFOLIO_PRESETS['jguxd'];
+            if (defaultPreset) {
+                defaultPreset.assets.forEach(assetData => {
+                    addInitialAsset(assetData);
+                });
+                // Set the initial image
+                portfolioImage.src = defaultPreset.image;
+            }
+
+            // Set initial portfolio description
+            updatePortfolioDescription('jguxd');
 
             // Initial display of table and messages for defaults
             recalculateAndDisplay();
             
             // Set initial status message
-            statusMessage.textContent = "Welcome to the JGuxd Asset Investment Calculator!";
+            statusMessage.textContent = "Welcome to the JGUXD Asset Investment Calculator!";
             statusMessage.classList.remove('message-info', 'message-error');
             statusMessage.classList.add('message-success');
 
