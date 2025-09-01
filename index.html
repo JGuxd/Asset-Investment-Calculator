@@ -278,6 +278,63 @@
             margin-right: 0.5rem;
             vertical-align: middle;
         }
+        .load-button {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .load-button:hover {
+            background-color: #2563eb;
+        }
+        /* Modal styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #aaa;
+        }
+        .close-button:hover, .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Style for the editable description field */
+        .editable-description-text {
+            cursor: pointer;
+            text-decoration: underline dotted #9ca3af;
+            text-underline-offset: 4px;
+        }
+        .editable-description-input {
+            background-color: #f9fafb;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -297,6 +354,7 @@
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">About</a></li>
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Donate</a></li>
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Share</a></li>
+                        <li class="text-gray-900">|</li>
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Sign-In/Out</a></li>
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Settings</a></li>
                     </ul>
@@ -319,8 +377,7 @@
                         <select id="portfolioPresetSelect" class="w-full md:w-60 h-12 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base">
                             <option value="all-weather" selected>All-Weather (Ray Dalio)</option>
                             <option value="jguxd">Growth-Weather (JGUXD)</option>
-                            <option value="new-60-40">The New 60/40</option>
-                            <option value="50-50">50/50</option>
+                            <option value="new-portfolio">Create New Portfolio</option>
                         </select>
                     </div>
                 </div>
@@ -329,6 +386,13 @@
                 <div id="portfolioDescriptionContainer" class="flex-1 w-full mt-4 md:mt-0 p-0 text-base text-gray-700">
                     <!-- Title and description text will be dynamically inserted here -->
                 </div>
+            </div>
+
+            <!-- New Portfolio Name Input Section (Initially Hidden) -->
+            <div id="newPortfolioInputSection" class="mb-8 flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 p-4 bg-gray-100 rounded-lg shadow-sm" style="display: none;">
+                <label for="newPortfolioNameInput" class="text-lg font-semibold text-gray-700 whitespace-nowrap">New Portfolio Name:</label>
+                <input type="text" id="newPortfolioNameInput" placeholder="Enter a name for your portfolio" class="flex-grow w-full border-gray-300 rounded-md shadow-sm">
+                <button id="saveNewPortfolioBtn" class="save-button w-full sm:w-auto">Save New Portfolio</button>
             </div>
 
             <div class="calculator-container">
@@ -431,7 +495,7 @@
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 The JGUXD Growth-Weather Portfolio combines Ray Dalio's proven All-Weather asset allocation framework with carefully selected individual growth stocks. This custom strategy maintains the risk-balanced approach of the original All-Weather model while replacing low-yielding bonds with high-potential growth stocks and dividend champions, delivering both aggressive growth and defensive stability across all economic environments.
                             </p>
-                
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">Original Ray Dalio All Weather Asset Allocation</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 The traditional All Weather portfolio is built with the following allocation:
@@ -452,7 +516,7 @@
                                 <li><strong class="font-semibold">Lower Volatility:</strong> Designed to reduce drawdowns compared to traditional stock/bond portfolios</li>
                                 <li><strong class="font-semibold">All Weather:</strong> Works in rising/falling growth and rising/falling inflation environments</li>
                             </ul>
-                
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">Top Stocks Alternative Portfolio</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 Replacing the All Weather allocation with top-performing individual stocks while maintaining similar sector/style diversification:
@@ -502,7 +566,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">Key Differences & Considerations</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 <strong class="font-semibold">Advantages of Stock Version:</strong>
@@ -529,7 +593,7 @@
                                 <li><strong class="font-semibold">Original All Weather:</strong> Lower volatility, stable income, true diversification</li>
                                 <li><strong class="font-semibold">Stock Alternative:</strong> Higher volatility, higher growth potential, equity-heavy correlation</li>
                             </ul>
-                
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">Implementation Notes</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 <strong class="font-semibold">For the Stock Version:</strong>
@@ -540,7 +604,7 @@
                                 <li>May want to include some actual bonds (10-20%) for true diversification</li>
                                 <li>Consider ETFs for some allocations to reduce single-stock risk</li>
                             </ul>
-                            
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">When Bond-Free Might Work:</h3>
                             <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
                                 <li>Very long time horizon (20+ years)</li>
@@ -548,17 +612,15 @@
                                 <li>Don't need portfolio income</li>
                                 <li>Young investor who can wait out crashes</li>
                             </ul>
-                            
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                <strong class="font-semibold">Risk Management:</strong>
-                            </p>
+        
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Risk Management:</h3>
                             <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
                                 <li>The stock version essentially becomes a diversified equity portfolio</li>
                                 <li>Consider it more of a "growth weather" than "all weather" strategy</li>
                                 <li>May perform poorly in deflationary environments where bonds excel</li>
                                 <li>Requires more active monitoring and potential adjustments</li>
                             </ul>
-                            
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">Outperform the All-Weather Educational Links:</h3>
                             <ul class="list-disc list-inside text-base font-normal text-blue-600 space-y-1 ml-4 mb-4">
                                 <li><a href="https://www.optimizedportfolio.com/all-weather-portfolio/" target="_blank" class="hover:underline">Ray Dalio All Weather Portfolio Review, ETFs, & Leverage (2025)</a></li>
@@ -574,7 +636,7 @@
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 The All-Weather Portfolio by Ray Dalio is engineered to deliver consistent returns regardless of economic conditions - whether growth is rising or falling, and whether inflation is increasing or decreasing. This institutional-grade strategy uses risk-parity principles to balance assets across four economic scenarios, providing steady performance without requiring market predictions.
                             </p>
-                
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">The Exact Asset Allocation</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 Here's exactly how to split your money:
@@ -642,7 +704,7 @@
                                 <li><strong class="font-semibold">Rebalance:</strong> Once per year, get back to exactly 50/50</li>
                                 <li><strong class="font-semibold">Automate:</strong> Set up monthly auto-investing in both funds</li>
                             </ul>
-                
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">Pros & Cons</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 <strong class="font-semibold">Good:</strong>
@@ -680,7 +742,7 @@
                                 <li>You're young and want maximum growth</li>
                                 <li>You can handle big ups and downs for bigger gains</li>
                             </ul>
-                
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">Bottom Line</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 <strong class="font-semibold">Trade-off:</strong> Give up some potential gains for much more predictable results.
@@ -694,7 +756,7 @@
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 Remember: The best strategy is the one you'll actually stick with.
                             </p>
-                            
+        
                             <h3 class="text-xl font-semibold mt-6 mb-2">All-Weather Educational Links:</h3>
                             <ul class="list-disc list-inside text-base font-normal text-blue-600 space-y-1 ml-4 mb-4">
                                 <li><a href="https://portfolioeinstein.com/tony-robbins-and-ray-dalios-portfolio/" target="_blank" class="hover:underline">PortfolioEinstein.com: All-Weather Portfolio: Tony Robbins And Ray Dalio With ETFs</a></li>
@@ -711,121 +773,11 @@
                             </ul>
                         </div>
                     </div>
-
-                    <!-- 50/50 Portfolio Education (Empty) -->
-                    <div id="50-50-education" style="display: none;">
-                        <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
-                            <h2 class="text-2xl font-bold mb-4">50/50 Portfolio - VTI & BND Quick Guide</h2>
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                <strong class="font-semibold">What Is It?</strong>
-                                <br>
-                                The simplest investing strategy ever: 50% stocks (VTI) and 50% bonds (BND). That's it.
-                            </p>
-                            <h3 class="text-xl font-semibold mt-6 mb-2">The Allocation</h3>
-                            <div class="overflow-x-auto rounded-xl shadow-md">
-                                <table class="min-w-full bg-gray-50 rounded-xl">
-                                    <thead>
-                                        <tr class="bg-gray-200">
-                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">ETF</th>
-                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">What It Is</th>
-                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Percentage</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        <tr class="bg-white">
-                                            <td class="py-3 px-4 text-gray-900">VTI</td>
-                                            <td class="py-3 px-4 text-gray-700">Total US Stock Market</td>
-                                            <td class="py-3 px-4 text-gray-700">50%</td>
-                                        </tr>
-                                        <tr class="bg-white">
-                                            <td class="py-3 px-4 text-gray-900">BND</td>
-                                            <td class="py-3 px-4 text-gray-700">Total US Bond Market</td>
-                                            <td class="py-3 px-4 text-gray-700">50%</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p class="text-base font-normal text-gray-700 mb-4 mt-4">
-                                What you own: Every major US company + US government and corporate bonds.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- New 60/40 Portfolio Education -->
-                    <div id="new-60-40-education" style="display: none;">
-                        <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
-                            <h2 class="text-2xl font-bold mb-4">The Classic 60/40 Portfolio</h2>
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                <strong class="font-semibold">What Is It?</strong>
-                                <br>
-                                The 60/40 portfolio is a traditional investing strategy that allocates 60% of its assets to stocks for growth and 40% to bonds for stability. It's a popular choice for investors seeking a balance between risk and return.
-                            </p>
-                            
-                            <h3 class="text-xl font-semibold mt-6 mb-2">The Allocation</h3>
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                Here's the standard allocation:
-                            </p>
-                            <div class="overflow-x-auto rounded-xl shadow-md">
-                                <table class="min-w-full bg-gray-50 rounded-xl">
-                                    <thead>
-                                        <tr class="bg-gray-200">
-                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Investment Type</th>
-                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Percentage</th>
-                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">What It Is</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        <tr class="bg-white">
-                                            <td class="py-3 px-4 text-gray-900">Stocks</td>
-                                            <td class="py-3 px-4 text-gray-700">60%</td>
-                                            <td class="py-3 px-4 text-gray-700">For growth, owns the US total stock market</td>
-                                        </tr>
-                                        <tr class="bg-white">
-                                            <td class="py-3 px-4 text-gray-900">Bonds</td>
-                                            <td class="py-3 px-4 text-gray-700">40%</td>
-                                            <td class="py-3 px-4 text-gray-700">For stability, owns the US total bond market</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p class="text-base font-normal text-gray-700 mb-4 mt-4">
-                                This is a common and effective allocation for many long-term investors.
-                            </p>
-                            
-                            <h3 class="text-xl font-semibold mt-6 mb-2">Pros & Cons</h3>
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                <strong class="font-semibold">Pros:</strong>
-                            </p>
-                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                                <li><strong class="font-semibold">Balanced Approach:</strong> Provides a good mix of growth and stability.</li>
-                                <li><strong class="font-semibold">Proven Track Record:</strong> Has historically delivered solid returns with less volatility than an all-stock portfolio.</li>
-                                <li><strong class="font-semibold">Simple to Manage:</strong> Easy to understand and rebalance periodically.</li>
-                                <li><strong class="font-semibold">Diversification:</strong> Stocks and bonds often move in opposite directions, helping to smooth out returns.</li>
-                            </ul>
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                <strong class="font-semibold">Cons:</strong>
-                            </p>
-                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                                <li><strong class="font-semibold">Not Aggressive:</strong> May not be suitable for very young investors with a long time horizon who can tolerate more risk.</li>
-                                <li><strong class="font-semibold">Interest Rate Risk:</strong> The bond portion can decline in value when interest rates rise.</li>
-                                <li><strong class="font-semibold">Lower Returns:</strong> Historically underperforms an all-stock portfolio during bull markets.</li>
-                            </ul>
-                            
-                            <h3 class="text-xl font-semibold mt-6 mb-2">Perfect For</h3>
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                The 60/40 portfolio is a great option for investors who are:
-                            </p>
-                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
-                                <li>Seeking a middle-ground between aggressive growth and capital preservation.</li>
-                                <li>Closer to retirement but still have a decade or more to invest.</li>
-                                <li>Uncomfortable with the high volatility of an all-stock portfolio.</li>
-                                <li>Looking for a simple, low-cost, and effective long-term strategy.</li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
         </main>
+        
+        <!-- Modal for saved portfolios removed -->
 
         <!-- Horizontal line separator -->
         <hr class="border-t border-gray-300 my-0" />
@@ -850,6 +802,7 @@
         <footer>
             <div class="px-4 sm:px-6 lg:px-8 text-center py-4 text-gray-900 text-sm">
                 <p>&copy; 2025 JGUXD Asset Calculator. All rights reserved.</p>
+                <div class="text-center text-xs text-gray-400 mt-2">Authenticated User ID: <span id="userIdDisplay">N/A</span></div>
             </div>
         </footer>
 
@@ -859,12 +812,14 @@
     <script type="module">
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration and Initialization (MANDATORY) ---
         // These global variables are provided by the Canvas environment.
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfigRaw = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         let firebaseConfig = null;
         if (firebaseConfigRaw) {
             try {
@@ -875,17 +830,58 @@
         }
 
         let app;
+        let db;
         let auth;
         let userId; // Will store the authenticated user's ID
+        let isAuthReady = false; // Flag to track Firebase auth status
+        let portfoliosRef; // Firestore collection reference
+        let userSavedPortfolios = {}; // Stores user-defined saved portfolios for quick access
 
         // Initialize Firebase services
-        if (firebaseConfig && firebaseConfig.projectId) { // Check for projectId to ensure validity
+        if (firebaseConfig && firebaseConfig.projectId) {
             app = initializeApp(firebaseConfig);
             auth = getAuth(app);
+            db = getFirestore(app);
+            portfoliosRef = collection(db, `artifacts/${appId}/users/anonymous_user/portfolios`);
+            console.log("Firebase initialized.");
         } else {
             console.error("Firebase configuration not found or invalid (missing projectId). Data persistence will not work.");
             document.getElementById('statusMessage').textContent = "Error: Firebase not configured.";
             document.getElementById('statusMessage').classList.add('message-error');
+        }
+
+        // --- AUTHENTICATION AND DATABASE SETUP ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in.
+                userId = user.uid;
+                document.getElementById('userIdDisplay').textContent = `${userId}`;
+                // Set the Firestore reference to the correct user-specific path
+                portfoliosRef = collection(db, `artifacts/${appId}/users/${userId}/portfolios`);
+                isAuthReady = true;
+                console.log("User signed in with UID:", userId);
+                // Load saved portfolios on successful sign-in
+                await populateSavedPortfoliosDropdown();
+            } else {
+                // User is signed out, or has not yet signed in.
+                userId = crypto.randomUUID(); // Fallback to anonymous ID if no auth token is provided
+                document.getElementById('userIdDisplay').textContent = `${userId}`;
+                console.log("No user signed in, using anonymous ID:", userId);
+            }
+        });
+
+        if (initialAuthToken) {
+            signInWithCustomToken(auth, initialAuthToken)
+                .then((userCredential) => {
+                    console.log("Successfully signed in with custom token.", userCredential.user.uid);
+                })
+                .catch((error) => {
+                    console.error("Custom token sign-in failed:", error);
+                    // Fallback to anonymous sign-in
+                    signInAnonymously(auth).catch(e => console.error("Anonymous sign-in failed:", e));
+                });
+        } else {
+            signInAnonymously(auth).catch(e => console.error("Anonymous sign-in failed:", e));
         }
 
         // --- Constants for Ray Dalio's All-Weather Portfolio and New 60/40 ---
@@ -895,14 +891,6 @@
             'Intermediate-Term Bonds': 15,
             'Gold': 7.5,
             'Commodities': 7.5
-        };
-
-        const NEW_SIXTY_FORTY_ALLOCATION = {
-            'Stocks': 60,
-            'Long-Term Bonds': 40,
-            'Intermediate-Term Bonds': 0,
-            'Gold': 0,
-            'Commodities': 0
         };
         
         // --- Simplified Asset Categories ---
@@ -917,10 +905,10 @@
 
         // Define colors for each asset type for the pie chart
         const ASSET_COLORS = {
-            'Stocks': '#4CAF50',        // Green
+            'Stocks': '#4CAF50',    // Green
             'Long-Term Bonds': '#2196F3', // Blue
             'Intermediate-Term Bonds': '#03A9F4', // Lighter Blue
-            'Gold': '#FFD700',         // Gold
+            'Gold': '#FFD700',      // Gold
             'Commodities': '#FF9800',  // Orange
             'Other (Not Categorized)': '#9E9E9E' // Gray
         };
@@ -929,14 +917,14 @@
         const PORTFOLIO_DESCRIPTIONS = {
             'jguxd': "The JGUXD Growth-Weather Portfolio combines Ray Dalio's proven All-Weather asset allocation framework with carefully selected individual growth stocks. This custom strategy maintains the risk-balanced approach of the original All-Weather model while replacing low-yielding bonds with high-potential growth stocks and dividend champions, delivering both aggressive growth and defensive stability across all economic environments.",
             'all-weather': "The All-Weather Portfolio by Ray Dalio is engineered to deliver consistent returns regardless of economic conditions - whether growth is rising or falling, and whether inflation is increasing or decreasing. This institutional-grade strategy uses risk-parity principles to balance assets across four economic scenarios, providing steady performance without requiring market predictions.",
-            '50-50': "A classic, simple portfolio that allocates half of its assets to stocks for growth and half to bonds for stability.",
-            'new-60-40': "The New 60/40 portfolio is a traditional investing strategy that allocates 60% of its assets to stocks for growth and 40% to bonds for stability."
+            'new-portfolio': "Start building your own custom portfolio from scratch."
         };
 
         // --- Global Variables ---
         let userAssets = []; // Stores user-entered asset data
         let assetIdCounter = 0; // Ensures unique IDs for new assets
         let portfolioPieChartInstance; // Chart.js instance
+        let currentPortfolioName = 'New Portfolio'; // Tracks the name of the currently loaded portfolio
 
         // --- DOM Elements ---
         const totalPortfolioAmountInput = document.getElementById('totalPortfolioAmountInput');
@@ -952,8 +940,22 @@
         const userAllocationTitle = document.getElementById('userAllocationTitle');
         const jguxdEducationDiv = document.getElementById('jguxd-education');
         const allWeatherEducationDiv = document.getElementById('all-weather-education');
-        const fiftyFiftyEducationDiv = document.getElementById('50-50-education');
-        const newSixtyFortyEducationDiv = document.getElementById('new-60-40-education'); // New element
+        const newPortfolioEducationDiv = document.createElement('div');
+        newPortfolioEducationDiv.id = 'new-portfolio-education';
+        newPortfolioEducationDiv.style.display = 'none';
+        newPortfolioEducationDiv.innerHTML = `
+            <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
+                <h3 class="text-xl font-semibold mt-6 mb-2">Create a Custom Portfolio</h3>
+                <p class="text-base font-normal text-gray-700 mb-4">
+                    Use the form above to add your own assets and create a custom asset allocation. You can enter assets by name, symbol, amount, or percentage, and the calculator will will update in real-time.
+                </p>
+                <p class="text-base font-normal text-gray-700 mb-4">
+                    This is your canvas. Design a strategy that perfectly fits your investment philosophy.
+                </p>
+            </div>
+        `;
+        document.getElementById('educationalContent').appendChild(newPortfolioEducationDiv);
+
         const portfolioImage = document.getElementById('portfolioImage');
 
         const statusMessage = document.getElementById('statusMessage'); // Replaced totalAllocationMessage for general status
@@ -961,6 +963,10 @@
         const totalEnteredAmountSpan = document.getElementById('totalEnteredAmount');
         const totalEnteredPercentageSpan = document.getElementById('totalEnteredPercentage');
         const portfolioPieChartCanvas = document.getElementById('portfolioPieChart');
+        const newPortfolioInputSection = document.getElementById('newPortfolioInputSection');
+        const newPortfolioNameInput = document.getElementById('newPortfolioNameInput');
+        const saveNewPortfolioBtn = document.getElementById('saveNewPortfolioBtn');
+
 
         // --- Register Chart.js Datalabels Plugin ---
         // This MUST be done once globally.
@@ -1348,19 +1354,19 @@
 
         // --- Function to update the user-entered totals line ---
         function updateUserEnteredTotals() {
-            const assetsForTotalCalculation = [...userAssets];
+            const assetsForCalculation = [...userAssets];
             const newAssetAmount = getRawNumberFromFormattedCurrency(newAssetAmountInput.value);
             const newAssetPercentage = parseFloat(String(newAssetPercentageInput.value).replace('%', '')) || 0;
 
             if (newAssetHasData()) {
-                assetsForTotalCalculation.push({
+                assetsForCalculation.push({
                     amount: newAssetAmount,
                     percentage: newAssetPercentage
                 });
             }
 
-            const totalAmountSum = assetsForTotalCalculation.reduce((sum, asset) => sum + (parseFloat(asset.amount) || 0), 0);
-            const totalPercentageSum = assetsForTotalCalculation.reduce((sum, asset) => sum + (parseFloat(asset.percentage) || 0), 0);
+            const totalAmountSum = assetsForCalculation.reduce((sum, asset) => sum + (parseFloat(asset.amount) || 0), 0);
+            const totalPercentageSum = assetsForCalculation.reduce((sum, asset) => sum + (parseFloat(asset.percentage) || 0), 0);
 
             totalEnteredAmountSpan.textContent = cleanAndFormatCurrency(totalAmountSum);
             totalEnteredPercentageSpan.textContent = formatPercentage(totalPercentageSum);
@@ -1515,23 +1521,11 @@
                     { name: 'DBC', fullName: 'Invesco DB Commodity Index Tracking Fund', category: 'Commodities', percentage: 7.5 }
                 ]
             },
-            '50-50': {
-                name: '50/50',
-                key: '50-50',
-                image: 'https://placehold.co/80x80/000000/FFFFFF?text=50/50',
-                assets: [
-                    { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 50 },
-                    { name: 'BND', fullName: 'Vanguard Total Bond Market ETF', category: 'Long-Term Bonds', percentage: 50 }
-                ]
-            },
-            'new-60-40': {
-                name: 'The New 60/40',
-                key: 'new-60-40',
-                image: 'https://placehold.co/80x80/000000/FFFFFF?text=60/40',
-                assets: [
-                    { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 60 },
-                    { name: 'BND', fullName: 'Vanguard Total Bond Market ETF', category: 'Long-Term Bonds', percentage: 40 }
-                ]
+            'new-portfolio': {
+                name: 'New Portfolio',
+                key: 'new-portfolio',
+                image: 'https://placehold.co/80x80/E0F2FE/2563EB?text=NEW',
+                assets: []
             }
         };
         
@@ -1625,18 +1619,192 @@
         // Event listener for the new add asset button in the blank row
         addNewAssetBtn.addEventListener('click', addAssetFromNewRow);
 
+        // New event listener for saving a new portfolio from the dedicated input field
+        saveNewPortfolioBtn.addEventListener('click', async () => {
+            if (!isAuthReady) {
+                statusMessage.textContent = "Authentication is not ready. Please wait a moment.";
+                statusMessage.className = 'message-box message-warning text-center';
+                return;
+            }
+            const portfolioName = newPortfolioNameInput.value.trim();
+            if (!portfolioName) {
+                statusMessage.textContent = "Save failed. Please enter a name for your new portfolio.";
+                statusMessage.className = 'message-box message-error text-center';
+                return;
+            }
+            
+            statusMessage.textContent = `Saving new portfolio "${portfolioName}"...`;
+            statusMessage.className = 'message-box message-info text-center';
+
+            try {
+                // Ensure all data is up-to-date before saving
+                recalculateAndDisplay();
+                
+                // Get the current portfolio state
+                const currentPortfolio = {
+                    name: portfolioName,
+                    totalAmount: getRawNumberFromFormattedCurrency(totalPortfolioAmountInput.value),
+                    assets: userAssets,
+                    description: (document.getElementById('portfolio-description-input-field') || document.getElementById('portfolio-description-text'))?.value || (document.getElementById('portfolio-description-input-field') || document.getElementById('portfolio-description-text'))?.textContent || '',
+                    timestamp: new Date().toISOString()
+                };
+
+                // Save to Firestore
+                await setDoc(doc(portfoliosRef, portfolioName), currentPortfolio);
+
+                statusMessage.textContent = `Portfolio "${portfolioName}" saved successfully!`;
+                statusMessage.className = 'message-box message-success text-center';
+
+                // Update the dropdown with the new portfolio and select it
+                await populateSavedPortfoliosDropdown(portfolioName);
+
+                // Reset the new portfolio input fields
+                newPortfolioNameInput.value = '';
+                newPortfolioInputSection.style.display = 'none';
+
+            } catch (error) {
+                console.error("Error saving new portfolio:", error);
+                statusMessage.textContent = "Error saving new portfolio. See console for details.";
+                statusMessage.className = 'message-box message-error text-center';
+            }
+        });
+
+
+        function loadPortfolioData(portfolio) {
+            // Clear existing assets and UI
+            userAssets = [];
+            userAssetsContainer.innerHTML = '';
+            assetIdCounter = 0; // Reset ID counter
+            
+            // Set the total portfolio amount from the loaded data
+            totalPortfolioAmountInput.value = cleanAndFormatCurrency(portfolio.totalAmount);
+            currentPortfolioName = portfolio.name;
+
+            // Load assets from the saved portfolio
+            portfolio.assets.forEach(assetData => {
+                addInitialAsset(assetData);
+            });
+            
+            recalculateAndDisplay();
+            updatePortfolioDescriptionArea(`saved-${portfolio.name}`);
+            updateUserAllocationTitle(portfolio.name);
+            portfolioImage.src = 'https://placehold.co/80x80/2563EB/E0F2FE?text=Saved';
+            newPortfolioEducationDiv.style.display = 'block';
+            statusMessage.textContent = `Portfolio "${portfolio.name}" loaded successfully!`;
+            statusMessage.className = 'message-box message-success text-center';
+        }
+
+        // --- Portfolio Preset Data and Listeners ---
+
         // Function to update the portfolio description and title
         function updatePortfolioDescriptionArea(presetKey) {
-            const presetName = PORTFOLIO_PRESETS[presetKey].name;
-            const description = PORTFOLIO_DESCRIPTIONS[presetKey];
-            const titleHtml = `<h4 class="font-bold text-lg mb-2">${presetName}</h4>`;
-            const descriptionHtml = `<p class="text-base text-gray-700">${description}</p>`;
-            portfolioDescriptionContainer.innerHTML = titleHtml + descriptionHtml;
+            const preset = PORTFOLIO_PRESETS[presetKey] || userSavedPortfolios[presetKey];
+            if (!preset) return;
+
+            const presetName = preset.name;
+            const existingDescription = preset.description || 'This is a custom portfolio you have created. Click here to add a custom description.';
+            const isCustom = presetKey.startsWith('saved-') || presetKey === 'new-portfolio';
+            
+            let descriptionHtml;
+            if (isCustom) {
+                descriptionHtml = `
+                    <div class="p-0 text-base text-gray-700">
+                        <h4 class="font-bold text-lg mb-2">${presetName}</h4>
+                        <span id="portfolio-description-text" class="editable-description-text">${existingDescription}</span>
+                        <input type="text" id="portfolio-description-input-field" class="editable-description-input" value="${existingDescription}" style="display:none;">
+                    </div>
+                `;
+            } else {
+                const description = PORTFOLIO_DESCRIPTIONS[presetKey];
+                descriptionHtml = `
+                    <h4 class="font-bold text-lg mb-2">${presetName}</h4>
+                    <p class="text-base text-gray-700">${description}</p>
+                `;
+            }
+            portfolioDescriptionContainer.innerHTML = descriptionHtml;
+
+            if (isCustom) {
+                const descriptionText = document.getElementById('portfolio-description-text');
+                const descriptionInput = document.getElementById('portfolio-description-input-field');
+
+                descriptionText.addEventListener('click', () => {
+                    descriptionText.style.display = 'none';
+                    descriptionInput.style.display = 'block';
+                    descriptionInput.focus();
+                });
+
+                descriptionInput.addEventListener('blur', (e) => saveDescription(e.target.value));
+                descriptionInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        saveDescription(e.target.value);
+                    }
+                });
+            }
+        }
+
+        async function saveDescription(newDescription) {
+            const descriptionText = document.getElementById('portfolio-description-text');
+            const descriptionInput = document.getElementById('portfolio-description-input-field');
+            if (descriptionText && descriptionInput) {
+                const trimmedDescription = newDescription.trim() || 'This is a custom portfolio you have created. Click here to add a custom description.';
+                descriptionText.textContent = trimmedDescription;
+                descriptionText.style.display = 'block';
+                descriptionInput.style.display = 'none';
+                
+                if (isAuthReady) {
+                    try {
+                        const savedPortfolio = userSavedPortfolios[`saved-${currentPortfolioName}`];
+                        if (savedPortfolio) {
+                             await setDoc(doc(portfoliosRef, currentPortfolioName), {
+                                 ...savedPortfolio,
+                                 description: trimmedDescription
+                             });
+                             console.log(`Description for "${currentPortfolioName}" updated successfully.`);
+                             userSavedPortfolios[`saved-${currentPortfolioName}`].description = trimmedDescription; // Update local cache
+                        }
+                    } catch (error) {
+                        console.error("Error saving new description:", error);
+                    }
+                }
+            }
         }
 
         // Function to update the user allocation title
         function updateUserAllocationTitle(portfolioName) {
             userAllocationTitle.textContent = `${portfolioName} Asset Allocation`;
+        }
+
+        // Function to fetch and populate saved portfolios in the dropdown
+        async function populateSavedPortfoliosDropdown(selectName = null) {
+            if (!isAuthReady || !db) {
+                console.warn("Firebase not ready. Cannot populate dropdown.");
+                return;
+            }
+
+            // Clear previous saved options
+            const currentOptions = Array.from(portfolioPresetSelect.options).filter(o => o.value.startsWith('saved-'));
+            currentOptions.forEach(o => o.remove());
+            userSavedPortfolios = {};
+            
+            try {
+                const q = query(portfoliosRef);
+                const querySnapshot = await getDocs(q);
+                
+                querySnapshot.forEach((doc) => {
+                    const portfolio = doc.data();
+                    const valueKey = `saved-${portfolio.name}`;
+                    const option = new Option(`${portfolio.name} (Saved)`, valueKey);
+                    portfolioPresetSelect.appendChild(option);
+                    userSavedPortfolios[valueKey] = portfolio;
+                });
+                if (selectName) {
+                    portfolioPresetSelect.value = `saved-${selectName}`;
+                    const event = new Event('change');
+                    portfolioPresetSelect.dispatchEvent(event);
+                }
+            } catch (error) {
+                console.error("Error populating saved portfolios:", error);
+            }
         }
         
         // Event listener for the new portfolio preset dropdown
@@ -1647,45 +1815,55 @@
             // Hide all educational content divs
             jguxdEducationDiv.style.display = 'none';
             allWeatherEducationDiv.style.display = 'none';
-            fiftyFiftyEducationDiv.style.display = 'none';
-            newSixtyFortyEducationDiv.style.display = 'none';
+            newPortfolioEducationDiv.style.display = 'none';
             
-            // Update image source
-            if (portfolioImage) {
-                portfolioImage.src = presetData.image;
+            // Show/hide the new portfolio input section
+            if (presetKey === 'new-portfolio') {
+                newPortfolioInputSection.style.display = 'flex';
+                // Clear the asset list to create a blank canvas
+                userAssets = [];
+                userAssetsContainer.innerHTML = '';
+            } else {
+                newPortfolioInputSection.style.display = 'none';
             }
-
-            if (presetData) {
-                // Clear existing assets and UI
+            
+            // Update image source and load data
+            if (presetKey.startsWith('saved-')) {
+                const savedPortfolio = userSavedPortfolios[presetKey];
+                loadPortfolioData(savedPortfolio);
+            } else if (presetData) {
+                // Clear existing assets and UI for all presets
                 userAssets = [];
                 userAssetsContainer.innerHTML = '';
                 
-                // Load assets from the selected preset
+                // Load assets from the selected preset, unless it's the "new-portfolio" preset
                 assetIdCounter = 0; // Reset ID counter
-                presetData.assets.forEach(assetData => {
-                    addInitialAsset(assetData);
-                });
+                if (presetKey !== 'new-portfolio') {
+                    presetData.assets.forEach(assetData => {
+                        addInitialAsset(assetData);
+                    });
+                }
                 
                 // Update the UI
                 recalculateAndDisplay();
                 statusMessage.textContent = `Portfolio preset "${e.target.options[e.target.selectedIndex].text}" loaded successfully!`;
                 statusMessage.classList.remove('message-info', 'message-error', 'message-warning');
                 statusMessage.classList.add('message-success');
-            }
+                // Update image for built-in presets
+                portfolioImage.src = presetData.image;
 
-            // Show the relevant educational content
-            if (presetKey === 'jguxd') {
-                jguxdEducationDiv.style.display = 'block';
-            } else if (presetKey === 'all-weather') {
-                allWeatherEducationDiv.style.display = 'block';
-            } else if (presetKey === '50-50') {
-                fiftyFiftyEducationDiv.style.display = 'block';
-            } else if (presetKey === 'new-60-40') {
-                newSixtyFortyEducationDiv.style.display = 'block';
+                // Show the relevant educational content
+                if (presetKey === 'jguxd') {
+                    jguxdEducationDiv.style.display = 'block';
+                } else if (presetKey === 'all-weather') {
+                    allWeatherEducationDiv.style.display = 'block';
+                } else if (presetKey === 'new-portfolio') {
+                    newPortfolioEducationDiv.style.display = 'block';
+                }
             }
 
             updatePortfolioDescriptionArea(presetKey);
-            updateUserAllocationTitle(presetData.name);
+            updateUserAllocationTitle(presetKey.startsWith('saved-') ? userSavedPortfolios[presetKey].name : presetData.name);
         });
 
         // Initial setup on page load
