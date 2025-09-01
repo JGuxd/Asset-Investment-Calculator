@@ -297,7 +297,7 @@
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">About</a></li>
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Donate</a></li>
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Share</a></li>
-                        <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Sign-in/Out</a></li>
+                        <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Sign-In/Out</a></li>
                         <li><a href="#" class="text-gray-900 hover:text-gray-700 transition duration-300 ease-in-out">Settings</a></li>
                     </ul>
                 </nav>
@@ -313,12 +313,13 @@
             <div class="mb-8 flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-8">
                 <!-- Dropdown and Image Container -->
                 <div class="flex-shrink-0 flex items-start space-x-4 w-full md:w-auto">
-                    <img id="portfolioImage" src="" alt="Portfolio thumbnail" class="w-20 h-20 rounded-md shadow-md object-cover" onerror="this.src='https://placehold.co/80x80/E2E8F0/000000?text=No+Image';">
+                    <img id="portfolioImage" src="" alt="Portfolio thumbnail" class="w-20 h-20 rounded-md shadow-md object-cover" onerror="this.src='https://placehold.co/80x80/000000/FFFFFF?text=No+Image';">
                     <div>
-                        <label for="portfolioPresetSelect" class="block text-sm font-medium text-gray-700 mb-1">My Portfolios</label>
+                        <label for="portfolioPresetSelect" class="block text-sm font-medium text-gray-700 mb-1">Asset Allocation Strategy:</label>
                         <select id="portfolioPresetSelect" class="w-full md:w-60 h-12 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base">
-                            <option value="jguxd">JGuxd portfolio</option>
-                            <option value="all-weather">All-Weather</option>
+                            <option value="all-weather">All-Weather (Ray Dalio)</option>
+                            <option value="jguxd">All-Climate (JGUXD)</option>
+                            <option value="new-60-40">The New 60/40</option>
                             <option value="50-50">50/50</option>
                         </select>
                     </div>
@@ -339,7 +340,7 @@
                 </div>
 
                 <!-- User Input Section -->
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Your Asset Allocations</h2>
+                <h2 id="userAllocationTitle" class="text-2xl font-semibold text-gray-800 mb-4">Your Asset Allocations</h2>
 
                 <!-- Column Headers for User Input using Grid -->
                 <div class="hidden sm:grid asset-grid px-4 py-2 text-sm text-gray-600 uppercase font-semibold">
@@ -539,6 +540,17 @@
                                 <li>May want to include some actual bonds (10-20%) for true diversification</li>
                                 <li>Consider ETFs for some allocations to reduce single-stock risk</li>
                             </ul>
+                            
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">When Bond-Free Might Work:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>Very long time horizon (20+ years)</li>
+                                <li>High risk tolerance</li>
+                                <li>Don't need portfolio income</li>
+                                <li>Young investor who can wait out crashes</li>
+                            </ul>
+                            
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 <strong class="font-semibold">Risk Management:</strong>
                             </p>
@@ -547,6 +559,18 @@
                                 <li>Consider it more of a "growth weather" than "all weather" strategy</li>
                                 <li>May perform poorly in deflationary environments where bonds excel</li>
                                 <li>Requires more active monitoring and potential adjustments</li>
+                            </ul>
+                            
+                            <h3 class="text-xl font-semibold mt-6 mb-2">All-Weather Educational Links:</h3>
+                            <ul class="list-disc list-inside text-base font-normal text-blue-600 space-y-1 ml-4 mb-4">
+                                <li><a href="https://www.portfoliodiversified.com/all-weather-portfolio/tony-robbins-ray-dalio/" target="_blank" class="hover:underline">Build the all weather portfolio, tony robbins and ray dalio with e t fs</a></li>
+                                <li><a href="https://turingtrader.com/blog/robbins-all-seasons-portfolio/" target="_blank" class="hover:underline">Robbins’ All-Seasons Portfolio – TuringTrader.com</a></li>
+                                <li><a href="https://www.tonyrobbins.com/podcasts/the-end-of-the-bull-market-ray-dalio/" target="_blank" class="hover:underline">The End of the Bull Market • Ray Dalio | Tony Robbins</a></li>
+                                <li><a href="https://www.investopedia.com/articles/investing/091715/remember-allweather-portfolio.asp" target="_blank" class="hover:underline">Remember the 'All-Weather' Portfolio?</a></li>
+                                <li><a href="https://www.forbes.com/advisor/investing/all-weather-portfolio/" target="_blank" class="hover:underline">All Weather Portfolio: Everything You Need To Know</a></li>
+                                <li><a href="https://www.youtube.com/watch?v=NnQ6r5qC0iE" target="_blank" class="hover:underline">Ray Dalio ALL WEATHER PORTFOLIO / What you NEED To Know!</a></li>
+                                <li><a href="https://www.nasdaq.com/articles/how-to-invest-1-according-tony-robbins" target="_blank" class="hover:underline">How To Invest Like the 1%, According to Tony Robbins</a></li>
+                                <li><a href="https://www.nerdwallet.com/article/investing/ray-dalios-all-weather-portfolio" target="_blank" class="hover:underline">Ray Dalio All Weather Portfolio [2024 Update]</a></li>
                             </ul>
                         </div>
                     </div>
@@ -721,6 +745,79 @@
                             </p>
                         </div>
                     </div>
+
+                    <!-- New 60/40 Portfolio Education -->
+                    <div id="new-60-40-education" style="display: none;">
+                        <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
+                            <h2 class="text-2xl font-bold mb-4">The Classic 60/40 Portfolio</h2>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">What Is It?</strong>
+                                <br>
+                                The 60/40 portfolio is a traditional investing strategy that allocates 60% of its assets to stocks for growth and 40% to bonds for stability. It's a popular choice for investors seeking a balance between risk and return.
+                            </p>
+                            
+                            <h3 class="text-xl font-semibold mt-6 mb-2">The Allocation</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                Here's the standard allocation:
+                            </p>
+                            <div class="overflow-x-auto rounded-xl shadow-md">
+                                <table class="min-w-full bg-gray-50 rounded-xl">
+                                    <thead>
+                                        <tr class="bg-gray-200">
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Investment Type</th>
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">Percentage</th>
+                                            <th class="py-3 px-4 text-left text-gray-600 uppercase text-sm">What It Is</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">Stocks</td>
+                                            <td class="py-3 px-4 text-gray-700">60%</td>
+                                            <td class="py-3 px-4 text-gray-700">For growth, owns the US total stock market</td>
+                                        </tr>
+                                        <tr class="bg-white">
+                                            <td class="py-3 px-4 text-gray-900">Bonds</td>
+                                            <td class="py-3 px-4 text-gray-700">40%</td>
+                                            <td class="py-3 px-4 text-gray-700">For stability, owns the US total bond market</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-base font-normal text-gray-700 mb-4 mt-4">
+                                This is a common and effective allocation for many long-term investors.
+                            </p>
+                            
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Pros & Cons</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Pros:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">Balanced Approach:</strong> Provides a good mix of growth and stability.</li>
+                                <li><strong class="font-semibold">Proven Track Record:</strong> Has historically delivered solid returns with less volatility than an all-stock portfolio.</li>
+                                <li><strong class="font-semibold">Simple to Manage:</strong> Easy to understand and rebalance periodically.</li>
+                                <li><strong class="font-semibold">Diversification:</strong> Stocks and bonds often move in opposite directions, helping to smooth out returns.</li>
+                            </ul>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                <strong class="font-semibold">Cons:</strong>
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li><strong class="font-semibold">Not Aggressive:</strong> May not be suitable for very young investors with a long time horizon who can tolerate more risk.</li>
+                                <li><strong class="font-semibold">Interest Rate Risk:</strong> The bond portion can decline in value when interest rates rise.</li>
+                                <li><strong class="font-semibold">Lower Returns:</strong> Historically underperforms an all-stock portfolio during bull markets.</li>
+                            </ul>
+                            
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Perfect For</h3>
+                            <p class="text-base font-normal text-gray-700 mb-4">
+                                The 60/40 portfolio is a great option for investors who are:
+                            </p>
+                            <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
+                                <li>Seeking a middle-ground between aggressive growth and capital preservation.</li>
+                                <li>Closer to retirement but still have a decade or more to invest.</li>
+                                <li>Uncomfortable with the high volatility of an all-stock portfolio.</li>
+                                <li>Looking for a simple, low-cost, and effective long-term strategy.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -731,7 +828,7 @@
         <!-- Footer Section -->
         <footer>
             <div class="px-4 sm:px-6 lg:px-8 text-center py-4 text-gray-900 text-sm">
-                <p>&copy; 2024 JGUXD Asset Calculator. All rights reserved.</p>
+                <p>&copy; 2025 JGUXD Asset Calculator. All rights reserved.</p>
             </div>
         </footer>
 
@@ -801,9 +898,10 @@
         
         // --- Portfolio Descriptions for the new feature ---
         const PORTFOLIO_DESCRIPTIONS = {
-            'jguxd': "This is a custom-designed portfolio with a mix of high-growth tech stocks and defensive value holdings. It aims to blend aggressive growth with some stability.",
-            'all-weather': "Inspired by Ray Dalio, this portfolio is built to perform consistently well across different economic conditions (rising/falling growth and inflation).",
-            '50-50': "A classic, simple portfolio that allocates half of its assets to stocks for growth and half to bonds for stability."
+            'jguxd': "The JGUXD, All-Climate Portfolio is a custom-designed portfolio with a mix of high-growth tech stocks and defensive value holdings, aiming to blend aggressive growth with some stability.",
+            'all-weather': "The All-Weather portfolio is built to perform consistently well across different economic conditions (rising/falling growth and inflation).",
+            '50-50': "A classic, simple portfolio that allocates half of its assets to stocks for growth and half to bonds for stability.",
+            'new-60-40': "The New 60/40 portfolio is a traditional investing strategy that allocates 60% of its assets to stocks for growth and 40% to bonds for stability."
         };
 
         // --- Global Variables ---
@@ -822,9 +920,11 @@
         const newFullAssetNameInput = document.getElementById('new-full-asset-name-input');
         const portfolioPresetSelect = document.getElementById('portfolioPresetSelect');
         const portfolioDescriptionDiv = document.getElementById('portfolioDescription'); // New element
+        const userAllocationTitle = document.getElementById('userAllocationTitle');
         const jguxdEducationDiv = document.getElementById('jguxd-education');
         const allWeatherEducationDiv = document.getElementById('all-weather-education');
         const fiftyFiftyEducationDiv = document.getElementById('50-50-education');
+        const newSixtyFortyEducationDiv = document.getElementById('new-60-40-education'); // New element
         const portfolioImage = document.getElementById('portfolioImage');
 
         const statusMessage = document.getElementById('statusMessage'); // Replaced totalAllocationMessage for general status
@@ -1363,16 +1463,18 @@
         // Defines the data for the three portfolio presets.
         const PORTFOLIO_PRESETS = {
             'jguxd': {
+                name: 'All-Climate (JGUXD)',
                 image: 'https://placehold.co/80x80/000000/FFFFFF?text=JGUXD',
                 assets: [
-                    { name: 'NVDA', fullName: 'NVIDIA', category: 'Stocks', percentage: 25 },
-                    { name: 'BRK.B', fullName: 'Berkshire Hathaway', category: 'Long-Term Bonds', percentage: 33.33 },
-                    { name: 'T', fullName: 'AT&T', category: 'Intermediate-Term Bonds', percentage: 16.67 },
-                    { name: 'FCX', fullName: 'Freeport-McMoRan', category: 'Commodities', percentage: 12.5 },
-                    { name: 'NEM', fullName: 'Newmont', category: 'Gold', percentage: 12.5 }
+                    { name: 'NVDA', fullName: 'NVIDIA', category: 'Stocks', percentage: 30 },
+                    { name: 'BRK.B', fullName: 'Berkshire Hathaway', category: 'Long-Term Bonds', percentage: 40 },
+                    { name: 'T', fullName: 'AT&T', category: 'Intermediate-Term Bonds', percentage: 15 },
+                    { name: 'FCX', fullName: 'Freeport-McMoRan', category: 'Commodities', percentage: 7.5 },
+                    { name: 'NEM', fullName: 'Newmont', category: 'Gold', percentage: 7.5 }
                 ]
             },
             'all-weather': {
+                name: 'All-Weather (Ray Dalio)',
                 image: 'https://placehold.co/80x80/000000/FFFFFF?text=All-%0AWeather',
                 assets: [
                     { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 30 },
@@ -1383,10 +1485,19 @@
                 ]
             },
             '50-50': {
+                name: '50/50',
                 image: 'https://placehold.co/80x80/000000/FFFFFF?text=50/50',
                 assets: [
                     { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 50 },
                     { name: 'BND', fullName: 'Vanguard Total Bond Market ETF', category: 'Long-Term Bonds', percentage: 50 }
+                ]
+            },
+            'new-60-40': {
+                name: 'The New 60/40',
+                image: 'https://placehold.co/80x80/000000/FFFFFF?text=60/40',
+                assets: [
+                    { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 60 },
+                    { name: 'BND', fullName: 'Vanguard Total Bond Market ETF', category: 'Long-Term Bonds', percentage: 40 }
                 ]
             }
         };
@@ -1490,6 +1601,11 @@
                 portfolioDescriptionDiv.textContent = 'Select a portfolio from the dropdown above to learn more about its strategy.';
             }
         }
+
+        // Function to update the user allocation title
+        function updateUserAllocationTitle(portfolioName) {
+            userAllocationTitle.textContent = `${portfolioName} Asset Allocation`;
+        }
         
         // Event listener for the new portfolio preset dropdown
         portfolioPresetSelect.addEventListener('change', (e) => {
@@ -1500,6 +1616,7 @@
             jguxdEducationDiv.style.display = 'none';
             allWeatherEducationDiv.style.display = 'none';
             fiftyFiftyEducationDiv.style.display = 'none';
+            newSixtyFortyEducationDiv.style.display = 'none';
             
             // Update image source
             if (portfolioImage) {
@@ -1531,9 +1648,12 @@
                 allWeatherEducationDiv.style.display = 'block';
             } else if (presetKey === '50-50') {
                 fiftyFiftyEducationDiv.style.display = 'block';
+            } else if (presetKey === 'new-60-40') {
+                newSixtyFortyEducationDiv.style.display = 'block';
             }
 
             updatePortfolioDescription(presetKey);
+            updateUserAllocationTitle(presetData.name);
         });
 
         // Initial setup on page load
@@ -1564,6 +1684,7 @@
 
             // Set initial portfolio description
             updatePortfolioDescription('jguxd');
+            updateUserAllocationTitle(PORTFOLIO_PRESETS['jguxd'].name);
 
             // Initial display of table and messages for defaults
             recalculateAndDisplay();
