@@ -836,6 +836,8 @@
         let isAuthReady = false; // Flag to track Firebase auth status
         let portfoliosRef; // Firestore collection reference
         let userSavedPortfolios = {}; // Stores user-defined saved portfolios for quick access
+        let isCurrentPortfolioModified = false; // Flag to track if the current preset has been modified
+        let initialPortfolioAssets = []; // Stores the initial state of assets to check for modifications
 
         // Initialize Firebase services
         if (firebaseConfig && firebaseConfig.projectId) {
@@ -1116,13 +1118,23 @@
 
         // --- Core Function: Recalculate and Display ---
         function recalculateAndDisplay() {
+            // Sort assets by percentage in descending order
+            userAssets.sort((a, b) => b.percentage - a.percentage);
+            renderAllAssets();
             renderPortfolioTable();
             validateTotalAllocation();
             updateUserEnteredTotals();
             updatePieChart();
+            checkIfModified();
         }
 
         // --- User Assets Section Functions ---
+        
+        // Renders all assets from the `userAssets` array.
+        function renderAllAssets() {
+            userAssetsContainer.innerHTML = ''; // Clear previous assets
+            userAssets.forEach(asset => renderAssetRow(asset));
+        }
 
         // Helper function to check if the new asset row has any meaningful data
         function newAssetHasData() {
@@ -1165,7 +1177,6 @@
                 }
 
                 userAssets.push(newAsset);
-                renderAssetRow(newAsset);
             }
             
             newAssetNameInput.value = '';
@@ -1181,6 +1192,7 @@
             newAssetNameInput.focus();
 
             recalculateAndDisplay();
+            isCurrentPortfolioModified = true;
         }
 
         // This function is used for programmatically adding initial/default assets
@@ -1195,13 +1207,13 @@
             };
             newAsset.amount = (newAsset.percentage / 100) * currentTotalPortfolioAmount;
             userAssets.push(newAsset);
-            renderAssetRow(newAsset);
         }
 
         // Function to remove an asset from the userAssets array and its row from DOM
         function removeAsset(idToRemove) {
             userAssets = userAssets.filter(asset => asset.id !== idToRemove);
             document.getElementById(`user-asset-wrapper-${idToRemove}`)?.remove();
+            isCurrentPortfolioModified = true;
             recalculateAndDisplay();
         }
 
@@ -1238,6 +1250,7 @@
             } else {
                 asset[field] = value;
             }
+            isCurrentPortfolioModified = true;
         }
 
         // Function to render a single asset row into the DOM
@@ -1323,6 +1336,7 @@
                 }
                 document.getElementById(`asset-percentage-${asset.id}`).value = calculatedPercentage.toFixed(2);
                 updateUserEnteredTotals();
+                isCurrentPortfolioModified = true;
             });
             amountInput.addEventListener('blur', (e) => {
                 e.target.value = cleanAndFormatCurrency(e.target.value);
@@ -1340,6 +1354,7 @@
                 }
                 document.getElementById(`asset-amount-${asset.id}`).value = calculatedAmount.toFixed(2);
                 updateUserEnteredTotals();
+                isCurrentPortfolioModified = true;
             });
             percentageInput.addEventListener('blur', (e) => {
                 e.target.value = formatPercentage(e.target.value);
@@ -1535,7 +1550,10 @@
             newAssetNameInput.value = String(e.target.value).toUpperCase();
             updateUserEnteredTotals();
         });
-        newAssetNameInput.addEventListener('blur', recalculateAndDisplay);
+        newAssetNameInput.addEventListener('blur', () => {
+            recalculateAndDisplay();
+            isCurrentPortfolioModified = true;
+        });
 
         newFullAssetNameDisplay.addEventListener('click', () => {
             newFullAssetNameDisplay.style.display = 'none';
@@ -1558,7 +1576,10 @@
             }
         });
 
-        newAssetCategorySelect.addEventListener('change', recalculateAndDisplay);
+        newAssetCategorySelect.addEventListener('change', () => {
+            recalculateAndDisplay();
+            isCurrentPortfolioModified = true;
+        });
 
         newAssetAmountInput.addEventListener('input', (e) => {
             const rawValue = getRawNumberFromFormattedCurrency(e.target.value);
@@ -1573,6 +1594,7 @@
         newAssetAmountInput.addEventListener('blur', (e) => {
             e.target.value = cleanAndFormatCurrency(e.target.value);
             recalculateAndDisplay();
+            isCurrentPortfolioModified = true;
         });
 
         newAssetPercentageInput.addEventListener('input', (e) => {
@@ -1588,6 +1610,7 @@
         newAssetPercentageInput.addEventListener('blur', (e) => {
             e.target.value = formatPercentage(e.target.value);
             recalculateAndDisplay();
+            isCurrentPortfolioModified = true;
         });
 
 
@@ -1614,6 +1637,7 @@
             const rawValue = getRawNumberFromFormattedCurrency(e.target.value);
             e.target.value = cleanAndFormatCurrency(rawValue);
             recalculateAndDisplay();
+            isCurrentPortfolioModified = true;
         });
 
         // Event listener for the new add asset button in the blank row
@@ -1658,9 +1682,11 @@
                 // Update the dropdown with the new portfolio and select it
                 await populateSavedPortfoliosDropdown(portfolioName);
 
-                // Reset the new portfolio input fields
+                // Reset the new portfolio input fields and state
                 newPortfolioNameInput.value = '';
                 newPortfolioInputSection.style.display = 'none';
+                isCurrentPortfolioModified = false;
+                initialPortfolioAssets = [];
 
             } catch (error) {
                 console.error("Error saving new portfolio:", error);
@@ -1668,6 +1694,16 @@
                 statusMessage.className = 'message-box message-error text-center';
             }
         });
+
+        function checkIfModified() {
+            const presetKey = portfolioPresetSelect.value;
+            if (isCurrentPortfolioModified && ['all-weather', 'jguxd'].includes(presetKey)) {
+                newPortfolioInputSection.style.display = 'flex';
+                newPortfolioNameInput.placeholder = `Save a copy of ${PORTFOLIO_PRESETS[presetKey].name}`;
+            } else if (presetKey !== 'new-portfolio') {
+                newPortfolioInputSection.style.display = 'none';
+            }
+        }
 
 
         function loadPortfolioData(portfolio) {
@@ -1692,6 +1728,9 @@
             newPortfolioEducationDiv.style.display = 'block';
             statusMessage.textContent = `Portfolio "${portfolio.name}" loaded successfully!`;
             statusMessage.className = 'message-box message-success text-center';
+            
+            // Set modified state to false on load
+            isCurrentPortfolioModified = false;
         }
 
         // --- Portfolio Preset Data and Listeners ---
@@ -1864,6 +1903,7 @@
 
             updatePortfolioDescriptionArea(presetKey);
             updateUserAllocationTitle(presetKey.startsWith('saved-') ? userSavedPortfolios[presetKey].name : presetData.name);
+            isCurrentPortfolioModified = false;
         });
 
         // Initial setup on page load
