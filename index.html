@@ -317,8 +317,8 @@
                     <div>
                         <label for="portfolioPresetSelect" class="block text-sm font-medium text-gray-700 mb-1">Asset Allocation Strategy:</label>
                         <select id="portfolioPresetSelect" class="w-full md:w-60 h-12 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base">
-                            <option value="all-weather">All-Weather (Ray Dalio)</option>
-                            <option value="jguxd">All-Climate (JGUXD)</option>
+                            <option value="all-weather" selected>All-Weather (Ray Dalio)</option>
+                            <option value="jguxd">Growth-Weather (JGUXD)</option>
                             <option value="new-60-40">The New 60/40</option>
                             <option value="50-50">50/50</option>
                         </select>
@@ -326,8 +326,8 @@
                 </div>
 
                 <!-- Portfolio Description Section -->
-                <div id="portfolioDescription" class="flex-1 w-full mt-4 md:mt-0 p-0 text-base text-gray-700">
-                    <!-- Description text will be dynamically inserted here -->
+                <div id="portfolioDescriptionContainer" class="flex-1 w-full mt-4 md:mt-0 p-0 text-base text-gray-700">
+                    <!-- Title and description text will be dynamically inserted here -->
                 </div>
             </div>
 
@@ -424,12 +424,12 @@
 
                 <!-- Educational Content Area -->
                 <div id="educationalContent" class="mt-8">
-                    <!-- JGuxd Portfolio Education -->
+                    <!-- JGUXD Portfolio Education -->
                     <div id="jguxd-education">
                         <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
-                            <h2 class="text-2xl font-bold mb-4">Ray Dalio's All Weather Portfolio vs Top Stocks Alternative</h2>
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Growth-Weather Portfolio</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
-                                The All Weather portfolio is designed to perform well across different economic environments by balancing risk contributions rather than dollar amounts.
+                                The JGUXD Growth-Weather Portfolio combines Ray Dalio's proven All-Weather asset allocation framework with carefully selected individual growth stocks. This custom strategy maintains the risk-balanced approach of the original All-Weather model while replacing low-yielding bonds with high-potential growth stocks and dividend champions, delivering both aggressive growth and defensive stability across all economic environments.
                             </p>
                 
                             <h3 class="text-xl font-semibold mt-6 mb-2">Original Ray Dalio All Weather Asset Allocation</h3>
@@ -541,9 +541,7 @@
                                 <li>Consider ETFs for some allocations to reduce single-stock risk</li>
                             </ul>
                             
-                            <p class="text-base font-normal text-gray-700 mb-4">
-                                <strong class="font-semibold">When Bond-Free Might Work:</strong>
-                            </p>
+                            <h3 class="text-xl font-semibold mt-6 mb-2">When Bond-Free Might Work:</h3>
                             <ul class="list-disc list-inside text-base font-normal text-gray-700 space-y-1 ml-4 mb-4">
                                 <li>Very long time horizon (20+ years)</li>
                                 <li>High risk tolerance</li>
@@ -561,16 +559,10 @@
                                 <li>Requires more active monitoring and potential adjustments</li>
                             </ul>
                             
-                            <h3 class="text-xl font-semibold mt-6 mb-2">All-Weather Educational Links:</h3>
+                            <h3 class="text-xl font-semibold mt-6 mb-2">Outperform the All-Weather Educational Links:</h3>
                             <ul class="list-disc list-inside text-base font-normal text-blue-600 space-y-1 ml-4 mb-4">
-                                <li><a href="https://www.portfoliodiversified.com/all-weather-portfolio/tony-robbins-ray-dalio/" target="_blank" class="hover:underline">Build the all weather portfolio, tony robbins and ray dalio with e t fs</a></li>
-                                <li><a href="https://turingtrader.com/blog/robbins-all-seasons-portfolio/" target="_blank" class="hover:underline">Robbins’ All-Seasons Portfolio – TuringTrader.com</a></li>
-                                <li><a href="https://www.tonyrobbins.com/podcasts/the-end-of-the-bull-market-ray-dalio/" target="_blank" class="hover:underline">The End of the Bull Market • Ray Dalio | Tony Robbins</a></li>
-                                <li><a href="https://www.investopedia.com/articles/investing/091715/remember-allweather-portfolio.asp" target="_blank" class="hover:underline">Remember the 'All-Weather' Portfolio?</a></li>
-                                <li><a href="https://www.forbes.com/advisor/investing/all-weather-portfolio/" target="_blank" class="hover:underline">All Weather Portfolio: Everything You Need To Know</a></li>
-                                <li><a href="https://www.youtube.com/watch?v=NnQ6r5qC0iE" target="_blank" class="hover:underline">Ray Dalio ALL WEATHER PORTFOLIO / What you NEED To Know!</a></li>
-                                <li><a href="https://www.nasdaq.com/articles/how-to-invest-1-according-tony-robbins" target="_blank" class="hover:underline">How To Invest Like the 1%, According to Tony Robbins</a></li>
-                                <li><a href="https://www.nerdwallet.com/article/investing/ray-dalios-all-weather-portfolio" target="_blank" class="hover:underline">Ray Dalio All Weather Portfolio [2024 Update]</a></li>
+                                <li><a href="https://www.optimizedportfolio.com/all-weather-portfolio/" target="_blank" class="hover:underline">Ray Dalio All Weather Portfolio Review, ETFs, & Leverage (2025)</a></li>
+                                <li><a href="https://retirecertain.com/all-weather-portfolio-pros-and-cons/" target="_blank" class="hover:underline">All Weather Portfolio Pros and Cons | ETFs | Performance | Chart | Videos</a></li>
                             </ul>
                         </div>
                     </div>
@@ -578,11 +570,9 @@
                     <!-- All-Weather Portfolio Education -->
                     <div id="all-weather-education" style="display: none;">
                         <div class="p-6 bg-white rounded-xl shadow-md text-gray-800">
-                            <h2 class="text-2xl font-bold mb-4">Ray Dalio's All Weather Portfolio - Easy Guide</h2>
+                            <h3 class="text-xl font-semibold mt-6 mb-2">All-Weather Portfolio</h3>
                             <p class="text-base font-normal text-gray-700 mb-4">
-                                <strong class="font-semibold">What Is It?</strong>
-                                <br>
-                                The All Weather Portfolio is a simple investing strategy that works in any economic condition. Created by billionaire investor Ray Dalio, it splits your money across different types of investments so you make money whether the economy is growing or shrinking, and whether prices are going up or down.
+                                The All-Weather Portfolio by Ray Dalio is engineered to deliver consistent returns regardless of economic conditions - whether growth is rising or falling, and whether inflation is increasing or decreasing. This institutional-grade strategy uses risk-parity principles to balance assets across four economic scenarios, providing steady performance without requiring market predictions.
                             </p>
                 
                             <h3 class="text-xl font-semibold mt-6 mb-2">The Exact Asset Allocation</h3>
@@ -704,6 +694,21 @@
                             <p class="text-base font-normal text-gray-700 mb-4">
                                 Remember: The best strategy is the one you'll actually stick with.
                             </p>
+                            
+                            <h3 class="text-xl font-semibold mt-6 mb-2">All-Weather Educational Links:</h3>
+                            <ul class="list-disc list-inside text-base font-normal text-blue-600 space-y-1 ml-4 mb-4">
+                                <li><a href="https://portfolioeinstein.com/tony-robbins-and-ray-dalios-portfolio/" target="_blank" class="hover:underline">PortfolioEinstein.com: All-Weather Portfolio: Tony Robbins And Ray Dalio With ETFs</a></li>
+                                <li><a href="https://www.turingtrader.com/portfolios/robbins-all-seasons/" target="_blank" class="hover:underline">TuringTrader.com: Robbins’ All-Seasons Portfolio</a></li>
+                                <li><a href="https://www.tonyrobbins.com/blog/the-end-of-the-bull-market?srsltid=AfmBOopguphPEiynN1vzOBK9dQNaGUFXAEoMDL4Lmvo1XPjfEMrFypFV" target="_blank" class="hover:underline">Ray Dalio and Tony Robbins: The End of the Bull Market</a></li>
+                                <li><a href="https://www.etftrends.com/fixed-income-channel/remember-all-weather-portfolio-having-killer-year/" target="_blank" class="hover:underline"> Remember the ‘All-Weather’ Portfolio?</a></li>
+                                <li><a href="https://www.iwillteachyoutoberich.com/all-weather-portfolio/" target="_blank" class="hover:underline">All Weather Portfolio: Everything You Need To Know</a></li>
+                                <li><a href="https://www.youtube.com/watch?v=wkZWMDBV83w" target="_blank" class="hover:underline">Ray Dalio ALL WEATHER PORTFOLIO / What you NEED To Know!</a></li>
+                                <li><a href="https://www.nasdaq.com/articles/how-invest-1-according-to-tony-robbins" target="_blank" class="hover:underline">How To Invest Like the 1%, According to Tony Robbins</a></li>
+                                <li><a href="https://ofdollarsanddata.com/ray-dalio-all-weather-portfolio/" target="_blank" class="hover:underline">Ray Dalio All Weather Portfolio [2024 Update]</a></li>
+                                <li><a href="https://www.cnbc.com/2018/12/11/ray-dalio-this-investment-strategy-is-good-in-a-financial-crisis.html" target="_blank" class="hover:underline">Ray Dalio says this investment strategy can help you weather a financial crisis</a></li>
+                                <li><a href="https://awealthofcommonsense.com/2014/11/back-testing-tony-robbins-weather-portfolio/" target="_blank" class="hover:underline">Back-Testing The Tony Robbins All-Weather Portfolio</a></li>
+                                <li><a href="https://www.wealthprofessional.ca/news/industry-news/putting-tony-robbins-all-weather-portfolio-to-the-test/185634" target="_blank" class="hover:underline">Putting Tony Robbin’s “all-weather” portfolio to the test</a></li>
+                            </ul>
                         </div>
                     </div>
 
@@ -824,6 +829,22 @@
 
         <!-- Horizontal line separator -->
         <hr class="border-t border-gray-300 my-0" />
+        
+        <!-- Legal Disclaimer Section -->
+        <div class="px-4 sm:px-6 lg:px-8 text-xs text-gray-600 my-8">
+            <h4 class="font-bold mb-2">IMPORTANT DISCLAIMER - PLEASE READ CAREFULLY</h4>
+            <p>The content on this website is for educational and informational purposes only and does not constitute financial, investment, tax, or legal advice. We are not registered financial advisors, investment advisors, or brokers, and nothing on this site should be considered a recommendation or solicitation to buy, sell, or trade any specific security, investment product, or strategy.</p>
+            <p class="mt-2"><b>INVESTMENT RISKS:</b> All investments carry substantial risk of loss, including the potential loss of your entire investment. Past performance is not indicative of future results. Market conditions, economic factors, and company-specific events can cause significant volatility and losses.</p>
+            <p class="mt-2"><b>LEVERAGED PRODUCTS WARNING:</b> Leveraged ETFs, options, futures, and other leveraged instruments carry extreme risk and are not suitable for most investors. Leverage can magnify both gains and losses exponentially. You could lose significantly more than your initial investment.</p>
+            <p class="mt-2"><b>INDIVIDUAL STOCKS:</b> Individual stock investments carry concentrated risk, including company-specific risks, sector risks, and market volatility. Diversification does not guarantee against loss.</p>
+            <p class="mt-2"><b>NO GUARANTEES:</b> No strategy, allocation, or investment approach can guarantee profits or protect against losses. All investment strategies involve risk of substantial losses.</p>
+            <p class="mt-2"><b>CONSULT PROFESSIONALS:</b> Before making any investment decisions, consult with qualified financial, tax, and legal professionals who can assess your individual circumstances, risk tolerance, and investment objectives.</p>
+            <p class="mt-2"><b>PERSONAL RESPONSIBILITY:</b> You are solely responsible for your investment decisions and their consequences. Never invest money you cannot afford to lose completely.</p>
+            <p class="mt-2">By using this website, you acknowledge that you understand these risks and agree to hold harmless the website operators from any investment losses or decisions made based on this content.</p>
+        </div>
+
+        <!-- Horizontal line separator -->
+        <hr class="border-t border-gray-300 my-0" />
 
         <!-- Footer Section -->
         <footer>
@@ -867,13 +888,21 @@
             document.getElementById('statusMessage').classList.add('message-error');
         }
 
-        // --- Constants for Ray Dalio's All-Weather Portfolio ---
+        // --- Constants for Ray Dalio's All-Weather Portfolio and New 60/40 ---
         const RAY_DALIO_ALLOCATION = {
             'Stocks': 30,
             'Long-Term Bonds': 40,
             'Intermediate-Term Bonds': 15,
             'Gold': 7.5,
             'Commodities': 7.5
+        };
+
+        const NEW_SIXTY_FORTY_ALLOCATION = {
+            'Stocks': 60,
+            'Long-Term Bonds': 40,
+            'Intermediate-Term Bonds': 0,
+            'Gold': 0,
+            'Commodities': 0
         };
         
         // --- Simplified Asset Categories ---
@@ -898,8 +927,8 @@
         
         // --- Portfolio Descriptions for the new feature ---
         const PORTFOLIO_DESCRIPTIONS = {
-            'jguxd': "The JGUXD, All-Climate Portfolio is a custom-designed portfolio with a mix of high-growth tech stocks and defensive value holdings, aiming to blend aggressive growth with some stability.",
-            'all-weather': "The All-Weather portfolio is built to perform consistently well across different economic conditions (rising/falling growth and inflation).",
+            'jguxd': "The JGUXD Growth-Weather Portfolio combines Ray Dalio's proven All-Weather asset allocation framework with carefully selected individual growth stocks. This custom strategy maintains the risk-balanced approach of the original All-Weather model while replacing low-yielding bonds with high-potential growth stocks and dividend champions, delivering both aggressive growth and defensive stability across all economic environments.",
+            'all-weather': "The All-Weather Portfolio by Ray Dalio is engineered to deliver consistent returns regardless of economic conditions - whether growth is rising or falling, and whether inflation is increasing or decreasing. This institutional-grade strategy uses risk-parity principles to balance assets across four economic scenarios, providing steady performance without requiring market predictions.",
             '50-50': "A classic, simple portfolio that allocates half of its assets to stocks for growth and half to bonds for stability.",
             'new-60-40': "The New 60/40 portfolio is a traditional investing strategy that allocates 60% of its assets to stocks for growth and 40% to bonds for stability."
         };
@@ -919,7 +948,7 @@
         const newFullAssetNameDisplay = document.getElementById('new-full-asset-name-display');
         const newFullAssetNameInput = document.getElementById('new-full-asset-name-input');
         const portfolioPresetSelect = document.getElementById('portfolioPresetSelect');
-        const portfolioDescriptionDiv = document.getElementById('portfolioDescription'); // New element
+        const portfolioDescriptionContainer = document.getElementById('portfolioDescriptionContainer');
         const userAllocationTitle = document.getElementById('userAllocationTitle');
         const jguxdEducationDiv = document.getElementById('jguxd-education');
         const allWeatherEducationDiv = document.getElementById('all-weather-education');
@@ -1463,7 +1492,8 @@
         // Defines the data for the three portfolio presets.
         const PORTFOLIO_PRESETS = {
             'jguxd': {
-                name: 'All-Climate (JGUXD)',
+                name: 'Growth-Weather (JGUXD)',
+                key: 'jguxd',
                 image: 'https://placehold.co/80x80/000000/FFFFFF?text=JGUXD',
                 assets: [
                     { name: 'NVDA', fullName: 'NVIDIA', category: 'Stocks', percentage: 30 },
@@ -1475,6 +1505,7 @@
             },
             'all-weather': {
                 name: 'All-Weather (Ray Dalio)',
+                key: 'all-weather',
                 image: 'https://placehold.co/80x80/000000/FFFFFF?text=All-%0AWeather',
                 assets: [
                     { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 30 },
@@ -1486,6 +1517,7 @@
             },
             '50-50': {
                 name: '50/50',
+                key: '50-50',
                 image: 'https://placehold.co/80x80/000000/FFFFFF?text=50/50',
                 assets: [
                     { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 50 },
@@ -1494,6 +1526,7 @@
             },
             'new-60-40': {
                 name: 'The New 60/40',
+                key: 'new-60-40',
                 image: 'https://placehold.co/80x80/000000/FFFFFF?text=60/40',
                 assets: [
                     { name: 'VTI', fullName: 'Vanguard Total Stock Market Index Fund ETF', category: 'Stocks', percentage: 60 },
@@ -1592,14 +1625,13 @@
         // Event listener for the new add asset button in the blank row
         addNewAssetBtn.addEventListener('click', addAssetFromNewRow);
 
-        // Function to update the portfolio description
-        function updatePortfolioDescription(presetKey) {
+        // Function to update the portfolio description and title
+        function updatePortfolioDescriptionArea(presetKey) {
+            const presetName = PORTFOLIO_PRESETS[presetKey].name;
             const description = PORTFOLIO_DESCRIPTIONS[presetKey];
-            if (description) {
-                portfolioDescriptionDiv.textContent = description;
-            } else {
-                portfolioDescriptionDiv.textContent = 'Select a portfolio from the dropdown above to learn more about its strategy.';
-            }
+            const titleHtml = `<h4 class="font-bold text-lg mb-2">${presetName}</h4>`;
+            const descriptionHtml = `<p class="text-base text-gray-700">${description}</p>`;
+            portfolioDescriptionContainer.innerHTML = titleHtml + descriptionHtml;
         }
 
         // Function to update the user allocation title
@@ -1652,7 +1684,7 @@
                 newSixtyFortyEducationDiv.style.display = 'block';
             }
 
-            updatePortfolioDescription(presetKey);
+            updatePortfolioDescriptionArea(presetKey);
             updateUserAllocationTitle(presetData.name);
         });
 
@@ -1672,19 +1704,22 @@
             const initialTotal = 100000;
             totalPortfolioAmountInput.value = cleanAndFormatCurrency(initialTotal);
 
-            // Load default assets from the 'jguxd' preset
-            const defaultPreset = PORTFOLIO_PRESETS['jguxd'];
+            // Set the default preset to 'all-weather'
+            const defaultPresetKey = 'all-weather';
+            const defaultPreset = PORTFOLIO_PRESETS[defaultPresetKey];
+            
             if (defaultPreset) {
                 defaultPreset.assets.forEach(assetData => {
                     addInitialAsset(assetData);
                 });
-                // Set the initial image
+                // Set the initial dropdown value and image
+                portfolioPresetSelect.value = defaultPresetKey;
                 portfolioImage.src = defaultPreset.image;
             }
 
-            // Set initial portfolio description
-            updatePortfolioDescription('jguxd');
-            updateUserAllocationTitle(PORTFOLIO_PRESETS['jguxd'].name);
+            // Set initial portfolio description and title
+            updatePortfolioDescriptionArea(defaultPresetKey);
+            updateUserAllocationTitle(defaultPreset.name);
 
             // Initial display of table and messages for defaults
             recalculateAndDisplay();
@@ -1695,7 +1730,7 @@
             statusMessage.classList.add('message-success');
 
             // Show default educational content
-            jguxdEducationDiv.style.display = 'block';
+            allWeatherEducationDiv.style.display = 'block';
         };
     </script>
 </body>
