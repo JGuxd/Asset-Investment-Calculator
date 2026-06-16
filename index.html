@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JGUXD All-Weather Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f0f4f8; }
@@ -42,13 +43,33 @@
 
             <div id="userAssetsContainer" class="space-y-4"></div>
 
-            <div class="mt-8 border-t pt-6">
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-t pt-8">
+                <div class="h-64"><canvas id="portfolioPieChart"></canvas></div>
                 <table class="w-full text-left">
                     <thead><tr class="text-gray-600 uppercase text-xs border-b">
                         <th class="py-2">Category</th><th class="py-2">Target</th><th class="py-2">Actual</th><th class="py-2">Diff</th>
                     </tr></thead>
                     <tbody id="portfolioTableBody"></tbody>
                 </table>
+            </div>
+
+            <div class="mt-12 bg-gray-50 p-6 rounded-xl border border-gray-200">
+                <h3 class="text-xl font-bold mb-4">Original Ray Dalio All Weather Asset Allocation</h3>
+                <p class="mb-4">The traditional All Weather portfolio is built with the following allocation:</p>
+                <ul class="list-disc ml-5 space-y-1 mb-6 text-gray-700">
+                    <li><strong>30% Stocks:</strong> (US Equity Market)</li>
+                    <li><strong>40% Long-term Bonds:</strong> (20+ year Treasury bonds)</li>
+                    <li><strong>15% Intermediate-term Bonds:</strong> (7-10 year Treasury bonds)</li>
+                    <li><strong>7.5% Commodities:</strong> (Broad commodities exposure)</li>
+                    <li><strong>7.5% Gold:</strong> (Inflation hedge)</li>
+                </ul>
+                <h4 class="font-bold mb-2">Key Principles:</h4>
+                <ul class="list-disc ml-5 space-y-1 text-gray-700">
+                    <li><strong>Risk Parity Approach:</strong> Each asset class contributes equally to portfolio risk.</li>
+                    <li><strong>Economic Environment Diversification:</strong> Performs across different growth/inflation scenarios.</li>
+                    <li><strong>Lower Volatility:</strong> Designed to reduce drawdowns compared to traditional stock/bond portfolios.</li>
+                    <li><strong>All Weather:</strong> Works in rising/falling growth and rising/falling inflation environments.</li>
+                </ul>
             </div>
         </main>
     </div>
@@ -57,6 +78,7 @@
         const assetTypes = ["Stocks", "Long-term Bonds", "Intermediate Bonds", "Commodities", "Gold", "Crypto"];
         const targets = { "Stocks": 30, "Long-term Bonds": 40, "Intermediate Bonds": 15, "Commodities": 7.5, "Gold": 7.5, "Crypto": 0 };
         let assets = [{ name: "VOO", type: "Stocks", amount: 30000 }];
+        let chart;
 
         function convertToRaw(el) {
             el.value = el.value.replace(/[^0-9]/g, '');
@@ -96,6 +118,28 @@
                     </div>`;
             });
             renderComparison(total);
+            renderChart(total);
+        }
+
+        function renderChart(total) {
+            const ctx = document.getElementById('portfolioPieChart').getContext('2d');
+            const dataMap = assetTypes.reduce((acc, type) => {
+                acc[type] = assets.filter(a => a.type === type).reduce((sum, a) => sum + a.amount, 0);
+                return acc;
+            }, {});
+
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(dataMap),
+                    datasets: [{
+                        data: Object.values(dataMap),
+                        backgroundColor: ['#3b82f6', '#f59e0b', '#10b981', '#ef4444', '#a855f7', '#6366f1']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
         }
 
         function addAsset() {
